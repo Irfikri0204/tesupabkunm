@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Swls;
+use App\Models\TestSetting;
 use Illuminate\Http\Request;
 
 class TesSwlsController extends Controller
 {
     public function store(Request $request)
     {
+        if (!TestSetting::isOpen('swls')) {
+            return redirect()->back()->with('error', 'Tes SWLS sementara tidak menerima jawaban.');
+        }
+
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',

@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Panas;
+use App\Models\TestSetting;
 use Illuminate\Http\Request;
 
 class TesPanasController extends Controller
 {
     public function store(Request $request)
     {
+        if (!TestSetting::isOpen('panas')) {
+            return redirect()->back()->with('error', 'Tes PANAS sementara tidak menerima jawaban.');
+        }
+
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',

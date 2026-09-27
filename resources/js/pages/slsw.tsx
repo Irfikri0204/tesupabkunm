@@ -1,54 +1,38 @@
-import ProgressBar from '@/Components/ProgressBar';
-import QuestionCard from '@/Components/QuestionCard';
+import ProgressBarPanas from '@/Components/ProgressPanas';
+import QuestionSwlsCard from '@/Components/QuestionCardSwls';
 import QuestionNavigation from '@/Components/QuestionNavigation';
 import FormLayout from '@/layouts/FormLayout';
 import { router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
 const questions = [
-    {
-        question: 'Secara keseluruhan, kehidupan saya hampir seperti dengan apa yang saya harapkan',
-        answers: ['Sangat Sesuai', 'Sesuai', 'Agak Sesuai', 'Netral', 'Tidak Sesuai', 'Sangat Tidak Sesuai'],
-    },
-    {
-        question: 'Kondisi kehidupan saya sangat baik',
-        answers: ['Sangat Sesuai', 'Sesuai', 'Agak Sesuai', 'Netral', 'Tidak Sesuai', 'Sangat Tidak Sesuai'],
-    },
-    {
-        question: 'Saya puas dengan kehidupan saya',
-        answers: ['Sangat Sesuai', 'Sesuai', 'Agak Sesuai', 'Netral', 'Tidak Sesuai', 'Sangat Tidak Sesuai'],
-    },
-    {
-        question: 'Sejauh ini, saya telah mendapatkan hal penting yang saya inginkan dalam hidup',
-        answers: ['Sangat Sesuai', 'Sesuai', 'Agak Sesuai', 'Netral', 'Tidak Sesuai', 'Sangat Tidak Sesuai'],
-    },
-    {
-        question: 'Seandainya saya dapat mengulang hidup saya, hampir tidak ada yang ingin saya ubah',
-        answers: ['Sangat Sesuai', 'Sesuai', 'Agak Sesuai', 'Netral', 'Tidak Sesuai', 'Sangat Tidak Sesuai'],
-    },
+    'Secara keseluruhan, kehidupan saya hampir seperti dengan apa yang saya harapkan',
+    'Kondisi kehidupan saya sangat baik',
+    'Saya puas dengan kehidupan saya',
+    'Sejauh ini, saya telah mendapatkan hal penting yang saya inginkan dalam hidup',
+    'Seandainya saya dapat mengulang hidup saya, hampir tidak ada yang ingin saya ubah',
 ];
 
-export default function Slws() {
+export default function TesSlws() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [user, setUser] = useState<{ nama: string; tanggal: string; jenisKelamin: string } | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [answers, setAnswers] = useState<number[]>(Array(questions.length).fill(0));
     const [result, setResult] = useState<{ totalSkor: number; kategori: string } | null>(null);
-    const [answers, setAnswers] = useState<string[]>(Array(questions.length).fill(''));
 
     const currentQuestion = questions[currentIndex];
     const progress = Math.round(((currentIndex + 1) / questions.length) * 100);
 
     useEffect(() => {
         const stored = localStorage.getItem('userData');
-        if (stored) {
-            setUser(JSON.parse(stored));
-        } else {
+        if (stored) setUser(JSON.parse(stored));
+        else {
             alert('Data identitas tidak ditemukan. Silakan isi identitas terlebih dahulu.');
-            router.visit('/tes/swls'); // arahkan balik jika data belum ada
+            router.visit('/tes/swls');
         }
     }, []);
 
-    const handleSelect = (answer: string) => {
+    const handleSelect = (answer: number) => {
         const newAnswers = [...answers];
         newAnswers[currentIndex] = answer;
         setAnswers(newAnswers);
@@ -58,24 +42,24 @@ export default function Slws() {
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(currentIndex + 1);
         } else {
+            // Validasi: pastikan semua sudah dijawab
+            const totalDijawab = answers.filter((a) => a !== 0).length;
+            if (totalDijawab < questions.length) {
+                alert('Silakan jawab semua pernyataan terlebih dahulu sebelum mengirim.');
+                return;
+            }
             handleSubmit();
         }
     };
 
-    const handleSelectQuestion = (index: number) => {
-        setCurrentIndex(index);
+    const handlePrev = () => {
+        if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
     };
-    const calculateScore = () => {
-        const skorMap: Record<string, number> = {
-            'Sangat Sesuai': 7,
-            Sesuai: 6,
-            'Agak Sesuai': 5,
-            Netral: 4,
-            'Tidak Sesuai': 3,
-            'Sangat Tidak Sesuai': 1,
-        };
 
-        const total = answers.reduce((sum, ans) => sum + (skorMap[ans] || 0), 0);
+    const handleSelectQuestion = (index: number) => setCurrentIndex(index);
+
+    const calculateScore = () => {
+        const total = answers.reduce((sum, ans) => sum + ans, 0);
 
         let kategori = '';
         if (total >= 31 && total <= 35) kategori = 'Sangat Puas';
@@ -91,14 +75,13 @@ export default function Slws() {
     const handleSubmit = () => {
         if (!user) return alert('Data identitas tidak ditemukan.');
         setIsSubmitting(true);
+
         const { totalSkor, kategori } = calculateScore();
         setResult({ totalSkor, kategori });
 
-        // Simpan ke localStorage agar bisa dibaca di halaman hasil
         localStorage.setItem('hasilSwls', JSON.stringify({ totalSkor, kategori }));
-
         localStorage.removeItem('userData');
-        // Kirim ke backend (opsional)
+
         router.post(
             '/tes/swls/submit',
             {
@@ -121,16 +104,19 @@ export default function Slws() {
     return (
         <FormLayout>
             <div className="py-6">
-                <h1 className="mb-4 text-center text-2xl font-bold">Yuk, Jawab Semua Pertanyaan!</h1>
+                <h1 className="mb-4 text-center text-lg font-bold md:text-2xl">Yuk, Jawab Semua Pernyataan!</h1>
+                <h2 className="text-md mb-4 text-center font-semibold md:text-xl">
+                    Berikut ini adalah pernyataan yang mungkin kamu alami berkaitan dengan kehidupan kamu. Jawablah pernyataan berikut ini sesuai
+                    keadaanmu.
+                </h2>
 
-                <ProgressBar currentIndex={currentIndex} progress={progress} total={questions.length} />
+                <ProgressBarPanas currentIndex={currentIndex} progress={progress} total={questions.length} />
 
-                <QuestionCard
+                <QuestionSwlsCard
                     total={questions.length}
                     currentIndex={currentIndex}
-                    question={currentQuestion.question}
-                    answers={currentQuestion.answers}
-                    selectedAnswer={answers[currentIndex]}
+                    question={currentQuestion}
+                    selectedAnswer={answers[currentIndex] || null}
                     onSelect={handleSelect}
                 />
 
@@ -138,8 +124,10 @@ export default function Slws() {
                     current={currentIndex}
                     total={questions.length}
                     onNext={handleNext}
-                    onPrev={() => setCurrentIndex(currentIndex - 1)}
+                    onPrev={handlePrev}
                     onSelect={handleSelectQuestion}
+                    isSubmitting={isSubmitting}
+                    answers={answers}
                 />
             </div>
         </FormLayout>

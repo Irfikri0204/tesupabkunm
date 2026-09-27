@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\GayaBelajar;
+use App\Models\TestSetting;
 use Illuminate\Http\Request;
 
 class TesGayaBelajarController extends Controller
 {
     public function store(Request $request)
     {
+        if (!TestSetting::isOpen('gayabelajar')) {
+            return redirect()->back()->with('error', 'Tes Gaya Belajar sementara tidak menerima jawaban.');
+        }
+
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',

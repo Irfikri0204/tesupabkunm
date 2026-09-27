@@ -85,6 +85,12 @@ export default function TesGayaBelajar() {
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(currentIndex + 1);
         } else {
+            // Validasi: pastikan semua sudah dijawab
+            const totalDijawab = answers.filter((a) => a !== '').length;
+            if (totalDijawab < questions.length) {
+                alert('Silakan jawab semua pertanyaan terlebih dahulu sebelum mengirim.');
+                return;
+            }
             handleSubmit();
         }
     };
@@ -152,7 +158,7 @@ export default function TesGayaBelajar() {
     return (
         <FormLayout>
             <div className="py-6">
-                <h1 className="mb-4 text-center text-2xl font-bold">Yuk, Jawab Semua Pertanyaan!</h1>
+                <h1 className="mb-4 text-center text-lg font-bold md:text-2xl">Yuk, Jawab Semua Pertanyaan!</h1>
 
                 <ProgressBar currentIndex={currentIndex} progress={progress} total={questions.length} />
 
@@ -172,6 +178,7 @@ export default function TesGayaBelajar() {
                     onPrev={() => setCurrentIndex(currentIndex - 1)}
                     onSelect={handleSelectQuestion}
                     isSubmitting={isSubmitting}
+                    answers={answers}
                 />
             </div>
         </FormLayout>

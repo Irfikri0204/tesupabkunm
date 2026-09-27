@@ -41,25 +41,32 @@ export default function HasilGayaBelajar() {
 
     return (
         <IdentitasLayout>
-            <div className="flex min-h-screen items-center justify-center">
-                <div className="w-[90%] max-w-md rounded-2xl bg-primary p-8 text-center text-white shadow-lg">
-                    <h2 className="mb-2 text-lg font-medium">Gaya Belajar Anda</h2>
-                    <h1 className="mb-4 text-3xl font-bold capitalize">{hasil.kategori}</h1>
-                    <p className="mb-6 text-sm">{deskripsi[hasil.kategori]}</p>
+            <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-slate-50 p-4 py-12 sm:p-8">
+                {/* Background Decorations */}
+                <div className="absolute -left-20 -top-20 h-96 w-96 rounded-full bg-purple-200/50 blur-3xl"></div>
+                <div className="absolute -bottom-32 -right-32 h-[30rem] w-[30rem] rounded-full bg-yellow-200/30 blur-3xl"></div>
 
-                    <div className="flex flex-col items-center gap-3">
+                <div className="relative z-10 w-full max-w-lg rounded-[2rem] bg-white p-8 text-center shadow-2xl shadow-slate-200/50 sm:p-12">
+                    <h2 className="mb-2 text-sm font-bold tracking-widest text-slate-400 uppercase mt-4">Gaya Belajar Anda</h2>
+                    <h1 className="mb-6 text-4xl font-black capitalize text-slate-800">{hasil.kategori}</h1>
+                    
+                    <div className="mb-8 rounded-2xl bg-purple-50 p-6 text-slate-600">
+                        <p className="leading-relaxed">{deskripsi[hasil.kategori]}</p>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-4">
                         <a
                             href="https://www.instagram.com/upa_bk_unm/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-full rounded-lg bg-yellow-400 px-6 py-3 font-semibold text-black shadow-md transition-all duration-200 hover:bg-yellow-500"
+                            className="inline-block w-full rounded-full bg-secondary px-6 py-4 text-sm font-bold text-slate-900 shadow-lg shadow-yellow-400/30 transition-all duration-200 hover:-translate-y-1 hover:bg-yellow-400"
                         >
                             Follow Instagram UPA BK UNM
                         </a>
 
                         <button
                             onClick={ulangiTes}
-                            className="w-full rounded-lg bg-white/80 px-6 py-3 font-semibold text-black shadow-md transition-all duration-200 hover:bg-white/60"
+                            className="mt-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors underline underline-offset-4"
                         >
                             Ulangi Tes
                         </button>

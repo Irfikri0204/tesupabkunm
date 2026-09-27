@@ -45,6 +45,11 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'global_test_settings' => \App\Models\TestSetting::where('is_open', true)->select('slug', 'name')->get(),
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error'   => $request->session()->get('error'),
+            ],
         ];
     }
 }

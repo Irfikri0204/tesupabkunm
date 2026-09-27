@@ -10,8 +10,12 @@ export default function ButtonPrimary({ text, link, isLebar = false }: ButtonPri
     const lebarClass = isLebar ? 'w-full' : 'w-fit';
 
     return (
-        <Link href={link} className={`${lebarClass} rounded-xl bg-[#FFD700] px-4 py-2 text-center font-semibold text-black hover:bg-[#cfb313]`}>
+        <Link
+            href={link}
+            className={`${lebarClass} inline-block rounded-xl bg-[#FFD700] px-6 py-3 text-center font-bold text-black shadow-md transition-all hover:bg-[#cfb313] active:scale-95`}
+        >
             {text}
         </Link>
     );
 }
+

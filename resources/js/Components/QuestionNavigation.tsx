@@ -6,36 +6,68 @@ interface Props {
     onNext: () => void;
     onPrev: () => void;
     onSelect: (index: number) => void;
-    isSubmitting?: boolean; // <-- tambah ini
+    isSubmitting?: boolean;
+    answers?: Record<number, any>;
+    groupSize?: number;
 }
 
-export default function QuestionNavigation({ current, total, onNext, onPrev, onSelect, isSubmitting = false }: Props) {
+export default function QuestionNavigation({ current, total, onNext, onPrev, onSelect, isSubmitting = false, answers = {}, groupSize = 1 }: Props) {
     const isLast = current === total - 1;
 
     return (
-        <div className="mt-8 flex flex-col-reverse items-center gap-4 sm:flex-row sm:justify-between">
+        <div className="mt-8 flex flex-col items-center gap-6 md:flex-row md:justify-between bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
             {/* Nomor Soal */}
-            <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
-                {[...Array(total)].map((_, i) => (
-                    <button
-                        key={i}
-                        onClick={() => onSelect(i)}
-                        className={`h-8 w-8 rounded-full border-2 text-sm font-medium transition-colors ${
-                            i === current ? 'border-purple-600 bg-purple-500 text-white' : 'border-purple-400 text-purple-600 hover:bg-purple-100'
-                        }`}
-                    >
-                        {i + 1}
-                    </button>
-                ))}
+            <div className="flex flex-wrap justify-center gap-2.5 md:justify-start flex-1">
+                {[...Array(total)].map((_, i) => {
+                    let isAnswered = false;
+                    if (Array.isArray(answers)) {
+                        isAnswered = groupSize > 1 
+                            ? [...Array(groupSize)].every((_, idx) => !!answers[(i * groupSize) + idx])
+                            : !!answers[i];
+                    } else {
+                        isAnswered = groupSize > 1
+                            ? [...Array(groupSize)].every((_, idx) => !!answers[i * groupSize + idx + 1])
+                            : !!answers[i + 1];
+                    }
+                    const isCurrent = i === current;
+
+                    return (
+                        <button
+                            key={i}
+                            onClick={() => onSelect(i)}
+                            className={`h-10 w-10 flex items-center justify-center rounded-xl text-sm font-bold transition-all duration-300 ${
+                                isCurrent
+                                    ? 'border-2 border-primary bg-primary text-white shadow-lg shadow-primary/30 scale-110 z-10'
+                                    : isAnswered
+                                        ? 'border-2 border-primary/20 bg-primary/5 text-primary hover:border-primary/50'
+                                        : 'border-2 border-slate-200 bg-white text-slate-400 hover:border-primary/30 hover:text-slate-600'
+                            }`}
+                        >
+                            {i + 1}
+                        </button>
+                    );
+                })}
             </div>
 
             {/* Tombol Navigasi */}
-            <div className="flex w-full justify-center sm:w-auto sm:justify-end">
+            <div className="flex w-full justify-center md:w-auto md:justify-end shrink-0 gap-3">
+                {current > 0 && (
+                    <button
+                        onClick={onPrev}
+                        disabled={isSubmitting}
+                        className="flex h-12 items-center justify-center rounded-xl px-6 font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 hover:text-slate-700 transition-all active:scale-95"
+                    >
+                        Kembali
+                    </button>
+                )}
+                
                 <button
                     onClick={onNext}
                     disabled={isSubmitting}
-                    className={`flex items-center justify-center gap-2 rounded-xl px-5 py-2 text-sm font-medium transition-colors sm:text-base ${
-                        isSubmitting ? 'cursor-not-allowed bg-gray-400 text-gray-700' : 'bg-purple-300 text-black hover:bg-purple-400'
+                    className={`flex h-12 items-center justify-center gap-2 rounded-xl px-8 font-bold transition-all active:scale-95 ${
+                        isSubmitting 
+                            ? 'cursor-not-allowed bg-slate-300 text-slate-500' 
+                            : 'bg-primary text-white shadow-lg shadow-primary/30 hover:bg-purple-800 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5'
                     }`}
                 >
                     {isSubmitting ? (
@@ -45,7 +77,7 @@ export default function QuestionNavigation({ current, total, onNext, onPrev, onS
                     ) : (
                         <>
                             Selanjutnya
-                            <RiArrowRightLine className="text-lg" />
+                            <RiArrowRightLine className="text-xl" />
                         </>
                     )}
                 </button>

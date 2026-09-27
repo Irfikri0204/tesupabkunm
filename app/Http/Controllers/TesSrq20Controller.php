@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Srq20;
+use App\Models\TestSetting;
 use Illuminate\Http\Request;
 
 class TesSrq20Controller extends Controller
 {
     public function store(Request $request)
     {
+        if (!TestSetting::isOpen('srq20')) {
+            return redirect()->back()->with('error', 'Tes SRQ-20 sementara tidak menerima jawaban.');
+        }
+
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',

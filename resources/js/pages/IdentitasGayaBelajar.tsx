@@ -4,7 +4,7 @@ import IdentitasLayout from '@/layouts/IdentitasLayout';
 export default function IdentitasGayaBelajar() {
     return (
         <IdentitasLayout>
-            <Identitas testName="Gaya Belajar" nextUrl="/tes/gayabelajar/soal" totalSoal={10} />
+            <Identitas testName="Kenali Gaya Belajarmu" nextUrl="/tes/gayabelajar/soal" totalSoal={10} />
         </IdentitasLayout>
     );
 }

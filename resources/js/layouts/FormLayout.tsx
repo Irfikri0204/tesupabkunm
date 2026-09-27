@@ -6,10 +6,11 @@ export default function FormLayout({ children }: PropsWithChildren<{}>) {
     return (
         <>
             <Header />
-            <main className="p-8">
+            <main className="p-2 sm:p-4 md:p-8 overflow-x-hidden">
                 <LinkBack />
                 {children}
             </main>
         </>
     );
 }
+

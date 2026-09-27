@@ -6,9 +6,6 @@ use App\Filament\Exports\TesSrq20Exporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Maatwebsite\Excel\Excel;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction as ExportBulkAction;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -23,7 +20,12 @@ class Srq20sTable
                 TextColumn::make('jenis_kelamin')->sortable()->searchable(),
                 TextColumn::make('total_skor')->sortable()->searchable(),
                 TextColumn::make('kategori')->sortable()->searchable(),
+                 TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->label('Tanggal Pengisian'),
             ])
+            ->defaultSort('created_at','desc')
             ->filters([
                 //
             ])
@@ -33,13 +35,6 @@ class Srq20sTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    ExportBulkAction::make()
-                    ->label('Export ke Excel')
-                    ->exports([
-                        ExcelExport::make()
-                        ->fromModel()
-                        ->withFilename(fn () => 'Tes SRQ-20 '.now()->format('Y-m-d'))
-                    ])
                 ]),
             ]);
     }

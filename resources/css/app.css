@@ -6,6 +6,265 @@
 @theme {
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --color-secondary: #ffd700;
-    --color-primary: #a67cba;
+    --color-secondary: #F5A510;
+    --color-primary: #4F2696;
+}
+
+.hide-scrollbar,
+body.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar,
+body.hide-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* Quill Editor — restore styles stripped by Tailwind v4 Preflight */
+.ql-toolbar.ql-snow {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px 12px 0 0;
+    background: #f8fafc;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 8px !important;
+}
+
+.ql-toolbar.ql-snow .ql-formats {
+    margin-right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.ql-toolbar.ql-snow button {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    cursor: pointer;
+    border-radius: 6px;
+    background: transparent;
+    border: none;
+    transition: background 0.15s;
+}
+
+.ql-toolbar.ql-snow button:hover {
+    background: #e2e8f0;
+}
+
+.ql-toolbar.ql-snow button.ql-active {
+    background: #ddd6fe;
+    color: #7c3aed;
+}
+
+.ql-toolbar.ql-snow button svg {
+    width: 18px;
+    height: 18px;
+}
+
+.ql-toolbar.ql-snow button svg .ql-stroke {
+    stroke: #475569;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.ql-toolbar.ql-snow button svg .ql-fill {
+    fill: #475569;
+    stroke: none;
+}
+
+.ql-toolbar.ql-snow button svg .ql-thin {
+    stroke: #475569;
+    fill: none;
+    stroke-width: 1;
+}
+
+.ql-toolbar.ql-snow button.ql-active svg .ql-stroke {
+    stroke: #7c3aed;
+}
+
+.ql-toolbar.ql-snow button.ql-active svg .ql-fill {
+    fill: #7c3aed;
+}
+
+.ql-toolbar.ql-snow .ql-picker {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    height: 28px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+    cursor: pointer;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    position: relative;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label svg {
+    width: 18px;
+    height: 18px;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label svg .ql-stroke {
+    stroke: #475569;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.ql-toolbar.ql-snow .ql-picker-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 50;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    padding: 4px;
+    min-width: 100%;
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+    display: block;
+}
+
+.ql-toolbar.ql-snow .ql-picker-options .ql-picker-item {
+    display: block;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.ql-toolbar.ql-snow .ql-picker-options .ql-picker-item:hover {
+    background: #f1f5f9;
+}
+
+.ql-container.ql-snow {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 0 0 12px 12px;
+    font-size: 16px;
+}
+
+.ql-editor {
+    color: #1e293b;
+    line-height: 1.8;
+}
+
+.ql-editor.ql-blank::before {
+    color: #94a3b8;
+    font-style: italic;
+    left: 15px;
+    right: 15px;
+    pointer-events: none;
+}
+
+.ql-editor p,
+.ql-editor ol,
+.ql-editor ul,
+.ql-editor pre,
+.ql-editor blockquote,
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3 {
+    margin-bottom: 0.75em;
+}
+
+.ql-editor ul,
+.ql-editor ol {
+    padding-left: 1.5em;
+}
+
+.ql-editor li {
+    list-style-type: inherit;
+}
+
+.ql-editor img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 16px 0;
+}
+
+.ql-snow .ql-tooltip {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 8px 12px;
+    z-index: 100;
+}
+
+.ql-snow .ql-tooltip input[type=text] {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 13px;
+    outline: none;
+}
+
+.ql-snow .ql-tooltip a.ql-action::after,
+.ql-snow .ql-tooltip a.ql-remove::before {
+    margin-left: 8px;
+}
+
+/* Rendered HTML content (tips, instructions, articles) — restore list styles stripped by Tailwind v4 */
+[class*="prose"] ul,
+.html-content ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
+    margin-bottom: 0.75em;
+}
+
+[class*="prose"] ol,
+.html-content ol {
+    list-style-type: decimal;
+    padding-left: 1.5em;
+    margin-bottom: 0.75em;
+}
+
+[class*="prose"] li,
+.html-content li {
+    margin-bottom: 0.25em;
+    list-style-type: inherit;
+}
+
+[class*="prose"] p,
+.html-content p {
+    margin-bottom: 0.75em;
+}
+
+[class*="prose"] h1,
+[class*="prose"] h2,
+[class*="prose"] h3,
+.html-content h1,
+.html-content h2,
+.html-content h3 {
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+[class*="prose"] blockquote,
+.html-content blockquote {
+    border-left: 3px solid #e2e8f0;
+    padding-left: 1em;
+    margin: 0.75em 0;
+    color: #64748b;
 }

@@ -6,9 +6,13 @@ export default function IdentitasLayout({ children }: PropsWithChildren<{}>) {
     return (
         <>
             <Header />
-            <main className="bg-gradient-to-b from-purple-100 to-purple-300 p-2 md:p-8">
-                <LinkBack />
-                {children}
+            <main className="min-h-screen bg-slate-50 font-sans">
+                <div className="border-b border-slate-200 bg-white px-4 py-2 sm:px-8">
+                    <LinkBack />
+                </div>
+                <div className="w-full">
+                    {children}
+                </div>
             </main>
         </>
     );

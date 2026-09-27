@@ -7,6 +7,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 
+
 class EditGayaBelajar extends EditRecord
 {
     protected static string $resource = GayaBelajarResource::class;

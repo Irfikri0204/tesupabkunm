@@ -9,28 +9,43 @@ interface QuestionCardProps {
 
 export default function QuestionCard({ currentIndex, total, question, answers, selectedAnswer, onSelect }: QuestionCardProps) {
     return (
-        <div className="mt-6">
-            {/* Label dinamis */}
-            <span className="inline-block rounded-full bg-yellow-400 px-3 py-1 text-sm font-bold text-black">
-                Pertanyaan {currentIndex + 1}
-            </span>
-
+        <div className="bg-white rounded-[2rem] p-6 md:p-10 shadow-lg shadow-slate-200/50 border border-slate-100">
             {/* Teks pertanyaan */}
-            <h2 className="mt-4 text-lg font-semibold">{question}</h2>
+            <h2 className="text-xl md:text-2xl font-black text-slate-800 leading-snug mb-8">{question}</h2>
 
             {/* Pilihan jawaban */}
-            <div className="mt-4 space-y-3">
-                {answers.map((answer, i) => (
-                    <button
-                        key={i}
-                        onClick={() => onSelect(answer)}
-                        className={`w-full rounded-xl border-2 p-3 text-left transition-all duration-200 ${
-                            selectedAnswer === answer ? 'border-purple-600 bg-purple-100' : 'border-purple-300 hover:border-purple-500'
-                        }`}
-                    >
-                        {answer}
-                    </button>
-                ))}
+            <div className="space-y-4">
+                {answers.map((answer, i) => {
+                    const isSelected = selectedAnswer === answer;
+                    return (
+                        <button
+                            key={i}
+                            onClick={() => onSelect(answer)}
+                            className={`group relative flex w-full items-center gap-4 rounded-2xl border-2 p-5 md:p-6 text-left transition-all duration-300 hover:-translate-y-1 ${
+                                isSelected 
+                                    ? 'border-primary bg-primary/5 shadow-md shadow-primary/10' 
+                                    : 'border-slate-100 bg-white hover:border-primary/30 hover:shadow-lg hover:shadow-slate-200/50'
+                            }`}
+                        >
+                            {/* Custom Radio Button */}
+                            <div className={`shrink-0 flex items-center justify-center w-6 h-6 rounded-full border-2 transition-colors ${
+                                isSelected ? 'border-primary bg-primary' : 'border-slate-300 group-hover:border-primary/50'
+                            }`}>
+                                {isSelected && (
+                                    <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                )}
+                            </div>
+                            
+                            <span className={`text-sm md:text-base font-semibold leading-relaxed transition-colors ${
+                                isSelected ? 'text-primary' : 'text-slate-600 group-hover:text-slate-800'
+                            }`}>
+                                {answer}
+                            </span>
+                        </button>
+                    );
+                })}
             </div>
         </div>
     );

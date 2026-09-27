@@ -23,7 +23,12 @@ class PanasTable
                 TextColumn::make('jenis_kelamin')->sortable()->searchable(),
                 TextColumn::make('total_skor')->sortable()->searchable(),
                 TextColumn::make('kategori')->sortable()->searchable(),
+                 TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->label('Tanggal Pengisian'),
             ])
+            ->defaultSort('created_at','desc')
             ->filters([
                 //
             ])
@@ -33,13 +38,6 @@ class PanasTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    ExportBulkAction::make()
-                    ->label('Export ke Excel')
-                    ->exports([
-                        ExcelExport::make()
-                        ->fromModel()
-                        ->withFilename(fn () => 'Tes PANAS '.now()->format('Y-m-d'))
-                    ])
                 ]),
             ]);
     }

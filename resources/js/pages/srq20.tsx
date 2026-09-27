@@ -37,13 +37,14 @@ export default function TesSrq20() {
     const currentQuestion = questions[currentIndex];
     const progress = Math.round(((currentIndex + 1) / questions.length) * 100);
 
+    // Cek apakah data identitas tersimpan
     useEffect(() => {
         const stored = localStorage.getItem('userData');
         if (stored) {
             setUser(JSON.parse(stored));
         } else {
             alert('Data identitas tidak ditemukan. Silakan isi identitas terlebih dahulu.');
-            router.visit('/srq20/panas'); // kembali ke identitas jika tidak ada data
+            router.visit('/srq20/panas');
         }
     }, []);
 
@@ -54,69 +55,83 @@ export default function TesSrq20() {
     };
 
     const handleNext = () => {
-        if (answers[currentIndex] === '') {
-            alert('Silakan pilih jawaban terlebih dahulu!');
-            return;
-        }
+        if (isSubmitting) return; // jangan lanjut kalau sedang submit
 
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(currentIndex + 1);
         } else {
+            // Validasi: pastikan semua sudah dijawab
+            const totalDijawab = answers.filter((a) => a !== '').length;
+            if (totalDijawab < questions.length) {
+                alert('Silakan jawab semua pertanyaan terlebih dahulu sebelum mengirim.');
+                return;
+            }
             handleSubmit();
         }
     };
 
     const handleSelectQuestion = (index: number) => {
-        setCurrentIndex(index);
+        if (!isSubmitting) setCurrentIndex(index);
     };
 
     const calculateScore = () => {
-        // "Ya" bernilai 1, "Tidak" bernilai 0
         const totalSkor = answers.reduce((sum, ans) => sum + (ans === 'Ya' ? 1 : 0), 0);
-
         let kategori = '';
         if (totalSkor <= 5) kategori = 'Normal';
         else if (totalSkor <= 10) kategori = 'Perlu Perhatian';
-        else kategori = 'Kemungkinan Gangguan Mental Emosional';
-
+        else kategori = 'Kemungkinan Gangguan Mental';
         return { totalSkor, kategori };
     };
 
-    const handleSubmit = () => {
-        if (!user) return alert('Data identitas tidak ditemukan.');
+    const handleSubmit = async () => {
+        if (!user) {
+            alert('Data identitas tidak ditemukan.');
+            return router.visit('/tes/srq20');
+        }
+
         setIsSubmitting(true);
+
         const { totalSkor, kategori } = calculateScore();
-
-        // Simpan ke localStorage untuk halaman hasil
         localStorage.setItem('hasilSrq20', JSON.stringify({ totalSkor, kategori }));
-
-        // Hapus identitas setelah selesai tes
         localStorage.removeItem('userData');
 
-        // Kirim ke backend (opsional)
-        router.post(
-            '/tes/srq20/submit',
-            {
-                nama: user.nama,
-                tanggal_lahir: user.tanggal,
-                jenis_kelamin: user.jenisKelamin,
-                answers,
-                total_skor: totalSkor,
-                kategori,
-            },
-            {
-                onSuccess: () => {
-                    setIsSubmitting(false);
-                    router.visit('/hasil/srq20');
+        try {
+            await router.post(
+                '/tes/srq20/submit',
+                {
+                    nama: user.nama,
+                    tanggal_lahir: user.tanggal,
+                    jenis_kelamin: user.jenisKelamin,
+                    answers,
+                    total_skor: totalSkor,
+                    kategori,
                 },
-            },
-        );
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        alert('Tes selesai! Jawaban kamu telah dikirim.');
+                        router.visit('/hasil/srq20');
+                    },
+                    onError: (errors) => {
+                        console.error(errors);
+                        alert('Gagal mengirim data, silakan coba lagi.');
+                    },
+                    onFinish: () => setIsSubmitting(false),
+                },
+            );
+        } catch (err) {
+            console.error(err);
+            alert('Terjadi kesalahan koneksi. Silakan coba lagi.');
+            setIsSubmitting(false);
+        }
     };
+
+    if (!user) return <div className="py-20 text-center">Memuat data...</div>;
 
     return (
         <FormLayout>
             <div className="py-6">
-                <h1 className="mb-4 text-center text-2xl font-bold">Yuk, Jawab Semua Pertanyaan!</h1>
+                <h1 className="mb-4 text-center text-lg font-bold md:text-2xl">Yuk, Jawab Semua Pertanyaan!</h1>
 
                 <ProgressBar currentIndex={currentIndex} progress={progress} total={questions.length} />
 
@@ -136,6 +151,7 @@ export default function TesSrq20() {
                     onPrev={() => setCurrentIndex(currentIndex - 1)}
                     onSelect={handleSelectQuestion}
                     isSubmitting={isSubmitting}
+                    answers={answers}
                 />
             </div>
         </FormLayout>
