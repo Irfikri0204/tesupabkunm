@@ -250,19 +250,30 @@ export default function Home({ teamMembers, siteSettings, linkedWebsites, testSe
                         <div className="relative order-2 lg:order-1 flex justify-center">
                             <div className="absolute inset-0 bg-primary/5 rounded-[3rem] transform -rotate-6 scale-105"></div>
                             <div className="absolute inset-0 bg-secondary/10 rounded-[3rem] transform rotate-3 scale-105"></div>
-                            <img src="/logoupabk.png" alt="Tentang UPA BK UNM" className="relative z-10 w-full max-w-sm mx-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500" />
+                            <img src={siteSettings.apa_itu_image ? '/storage/' + siteSettings.apa_itu_image : '/logoupabk.png'} alt="Tentang UPA BK UNM" className="relative z-10 w-full max-w-sm mx-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500" />
                         </div>
                         <div className="space-y-6 order-1 lg:order-2">
                             {/* <span className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary">
                                 Tentang Kami
                             </span> */}
-                            <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">Apa itu UPA BK UNM?</h2>
-                            <p className="text-slate-600 leading-relaxed text-lg">
-                                Unit Penunjang Akademik Bimbingan dan Konseling (UPA BK) Universitas Negeri Makassar hadir sebagai wujud nyata kepedulian universitas terhadap kesejahteraan psikologis dan pengembangan potensi setiap mahasiswa.
-                            </p>
-                            <p className="text-slate-600 leading-relaxed">
-                                Kami menyediakan ruang yang aman, nyaman, dan rahasia bagi Anda untuk berbagi, mengeksplorasi diri, dan menemukan solusi atas berbagai tantangan akademik maupun pribadi. Bersama tenaga profesional dan konselor sebaya yang terlatih, kami siap mendampingi perjalanan Anda meraih kesuksesan di kampus.
-                            </p>
+                            <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">
+                                {siteSettings.apa_itu_title || 'Apa itu UPA BK UNM?'}
+                            </h2>
+                            {siteSettings.apa_itu_desc ? (
+                                <div 
+                                    className="text-slate-600 leading-relaxed text-lg prose prose-slate max-w-none" 
+                                    dangerouslySetInnerHTML={{ __html: siteSettings.apa_itu_desc }} 
+                                />
+                            ) : (
+                                <>
+                                    <p className="text-slate-600 leading-relaxed text-lg">
+                                        Unit Penunjang Akademik Bimbingan dan Konseling (UPA BK) Universitas Negeri Makassar hadir sebagai wujud nyata kepedulian universitas terhadap kesejahteraan psikologis dan pengembangan potensi setiap mahasiswa.
+                                    </p>
+                                    <p className="text-slate-600 leading-relaxed">
+                                        Kami menyediakan ruang yang aman, nyaman, dan rahasia bagi Anda untuk berbagi, mengeksplorasi diri, dan menemukan solusi atas berbagai tantangan akademik maupun pribadi. Bersama tenaga profesional dan konselor sebaya yang terlatih, kami siap mendampingi perjalanan Anda meraih kesuksesan di kampus.
+                                    </p>
+                                </>
+                            )}
                             <div className="pt-4">
                                 <Link href="/profil-tim" className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-primary text-primary px-8 py-3.5 font-bold transition hover:bg-primary hover:text-white shadow-md shadow-primary/10">
                                     Kenali Tim Kami <RiArrowRightLine className="h-5 w-5" />

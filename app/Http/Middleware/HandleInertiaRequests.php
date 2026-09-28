@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'global_test_settings' => \App\Models\TestSetting::where('is_open', true)->select('slug', 'name')->get(),
+            'contact_info' => \App\Models\SiteSetting::whereIn('key', ['whatsapp_number', 'email', 'address', 'phone', 'instagram_url'])->pluck('value', 'key')->toArray(),
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error'   => $request->session()->get('error'),

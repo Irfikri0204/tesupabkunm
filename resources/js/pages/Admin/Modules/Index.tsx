@@ -30,14 +30,33 @@ export default function Index({ data }: any) {
         }
     };
 
+    const handleBulkDelete = () => {
+        if (selected.length === 0) return;
+        if (confirm(`Yakin ingin menghapus ${selected.length} modul yang dipilih?`)) {
+            router.post('/admin/moduls/bulk-delete', { ids: selected }, {
+                onSuccess: () => {
+                    setItems((prev: any[]) => prev.filter(i => !selected.includes(i.id)));
+                    setSelected([]);
+                }
+            });
+        }
+    };
+
     return (
         <AdminLayout title="Manajemen Modul">
             <div className="space-y-6">
                 <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
                     <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-wrap gap-3">
-                        <h3 className="text-lg font-black text-slate-800 tracking-tight uppercase flex items-center gap-2">
-                            <RiBookOpenLine size={20} className="text-purple-600" /> DAFTAR MODUL
-                        </h3>
+                        <div className="flex items-center gap-3">
+                            <h3 className="text-lg font-black text-slate-800 tracking-tight uppercase flex items-center gap-2">
+                                <RiBookOpenLine size={20} className="text-purple-600" /> DAFTAR MODUL
+                            </h3>
+                            {selected.length > 0 && (
+                                <button onClick={handleBulkDelete} className="text-xs bg-red-100 text-red-600 px-3 py-1.5 rounded-lg font-bold hover:bg-red-200 flex items-center gap-1 transition-colors">
+                                    <RiDeleteBinLine size={14} /> Hapus ({selected.length})
+                                </button>
+                            )}
+                        </div>
                         <div className="flex items-center gap-3 flex-wrap">
                             <div className="relative">
                                 <RiSearchLine size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />

@@ -1,9 +1,11 @@
 import Header from '@/Components/Header';
 import { PropsWithChildren } from 'react';
-import { Head, Link } from '@inertiajs/react';
-import { RiMailSendLine, RiPhoneLine, RiInstagramLine, RiMapPinLine, RiArrowRightSLine } from '@remixicon/react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { RiMailSendLine, RiPhoneLine, RiInstagramLine, RiMapPinLine, RiArrowRightSLine, RiWhatsappLine } from '@remixicon/react';
 
 export default function AppLayout({ children, title }: PropsWithChildren<{ title?: string }>) {
+    const { contact_info } = usePage().props as any;
+    const contact = contact_info || {};
     return (
         <>
             {title && <Head title={title} />}
@@ -63,42 +65,61 @@ export default function AppLayout({ children, title }: PropsWithChildren<{ title
                         <div className="lg:col-span-4 space-y-6">
                             <h4 className="font-bold text-xl text-white tracking-wide">Hubungi Kami</h4>
                             <ul className="space-y-6 text-white/80">
+                                {contact.email && (
                                 <li className="flex items-start gap-4">
                                     <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 shadow-inner">
                                         <RiMailSendLine className="w-6 h-6 text-secondary" />
                                     </div>
                                     <div className="flex flex-col mt-0.5">
                                         <span className="text-xs text-white/50 uppercase font-bold tracking-widest mb-1">Email</span>
-                                        <a href="mailto:upabk@unm.ac.id" className="hover:text-white transition-colors font-semibold text-base">upabk@unm.ac.id</a>
+                                        <a href={`mailto:${contact.email}`} className="hover:text-white transition-colors font-semibold text-base">{contact.email}</a>
                                     </div>
                                 </li>
+                                )}
+                                {contact.phone && (
                                 <li className="flex items-start gap-4">
                                     <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 shadow-inner">
                                         <RiPhoneLine className="w-6 h-6 text-secondary" />
                                     </div>
                                     <div className="flex flex-col mt-0.5">
                                         <span className="text-xs text-white/50 uppercase font-bold tracking-widest mb-1">Telepon</span>
-                                        <span className="font-semibold text-base">+62 411 123456</span>
+                                        <span className="font-semibold text-base">{contact.phone}</span>
                                     </div>
                                 </li>
+                                )}
+                                {contact.whatsapp_number && (
+                                <li className="flex items-start gap-4">
+                                    <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 shadow-inner">
+                                        <RiWhatsappLine className="w-6 h-6 text-secondary" />
+                                    </div>
+                                    <div className="flex flex-col mt-0.5">
+                                        <span className="text-xs text-white/50 uppercase font-bold tracking-widest mb-1">WhatsApp</span>
+                                        <a href={`https://wa.me/${contact.whatsapp_number}`} target="_blank" rel="noreferrer" className="hover:text-white transition-colors font-semibold text-base">+{contact.whatsapp_number}</a>
+                                    </div>
+                                </li>
+                                )}
+                                {contact.instagram_url && (
                                 <li className="flex items-start gap-4">
                                     <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 shadow-inner">
                                         <RiInstagramLine className="w-6 h-6 text-secondary" />
                                     </div>
                                     <div className="flex flex-col mt-0.5">
                                         <span className="text-xs text-white/50 uppercase font-bold tracking-widest mb-1">Instagram</span>
-                                        <a href="https://instagram.com/upa_bk_unm" target="_blank" rel="noreferrer" className="hover:text-white transition-colors font-semibold text-base">@upabkunm</a>
+                                        <a href={contact.instagram_url} target="_blank" rel="noreferrer" className="hover:text-white transition-colors font-semibold text-base">{contact.instagram_url.split('/').pop() || 'Instagram'}</a>
                                     </div>
                                 </li>
+                                )}
+                                {contact.address && (
                                 <li className="flex items-start gap-4">
                                     <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 shadow-inner">
                                         <RiMapPinLine className="w-6 h-6 text-secondary" />
                                     </div>
                                     <div className="flex flex-col mt-0.5">
                                         <span className="text-xs text-white/50 uppercase font-bold tracking-widest mb-1">Alamat</span>
-                                        <span className="font-semibold text-base leading-relaxed">Kampus UNM Gunung Sari<br />Makassar, Sulawesi Selatan</span>
+                                        <span className="font-semibold text-base leading-relaxed">{contact.address}</span>
                                     </div>
                                 </li>
+                                )}
                             </ul>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { router, useForm } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import { RiSaveLine, RiImageAddLine, RiDeleteBin6Line, RiMapPinLine, RiPhoneLine, RiMailSendLine, RiInstagramLine } from '@remixicon/react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -16,8 +16,13 @@ export default function Form({
     konselor_sebaya_title,
     konselor_sebaya_desc,
     konselor_sebaya_image,
+    apa_itu_title,
+    apa_itu_desc,
+    apa_itu_image,
 }: any) {
-    const [activeTab, setActiveTab] = useState<'visi' | 'struktur' | 'kontak' | 'konselor'>('visi');
+    const { auth } = usePage().props as any;
+    const isSuperadminOrDeveloper = auth?.user?.role === 'superadmin' || auth?.user?.email === 'fikrianggara72@gmail.com';
+    const [activeTab, setActiveTab] = useState<'visi' | 'struktur' | 'kontak' | 'konselor' | 'apaitu'>('visi');
     
     const { data, setData, post, processing, errors } = useForm({
         visi_text: visi_text || '',
@@ -30,14 +35,20 @@ export default function Form({
         konselor_sebaya_title: konselor_sebaya_title || '',
         konselor_sebaya_desc: konselor_sebaya_desc || '',
         konselor_sebaya_image: null as File | null,
+        apa_itu_title: apa_itu_title || '',
+        apa_itu_desc: apa_itu_desc || '',
+        apa_itu_image: null as File | null,
     });
 
     const [photoPreview, setPhotoPreview] = useState<string | null>(struktur_organisasi_image || null);
     const [konselorImagePreview, setKonselorImagePreview] = useState<string | null>(konselor_sebaya_image || null);
+    const [apaItuImagePreview, setApaItuImagePreview] = useState<string | null>(apa_itu_image || null);
     const [deletingImage, setDeletingImage] = useState(false);
     const [deletingKonselorImage, setDeletingKonselorImage] = useState(false);
+    const [deletingApaItuImage, setDeletingApaItuImage] = useState(false);
     const fileRef = useRef<HTMLInputElement>(null);
     const konselorFileRef = useRef<HTMLInputElement>(null);
+    const apaItuFileRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] ?? null;
@@ -55,6 +66,16 @@ export default function Form({
             setData('konselor_sebaya_image', file);
             const reader = new FileReader();
             reader.onload = () => setKonselorImagePreview(reader.result as string);
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleApaItuFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        if (file) {
+            setData('apa_itu_image', file);
+            const reader = new FileReader();
+            reader.onload = () => setApaItuImagePreview(reader.result as string);
             reader.readAsDataURL(file);
         }
     };
@@ -83,6 +104,18 @@ export default function Form({
         });
     };
 
+    const handleDeleteApaItuImage = () => {
+        if (!confirm('Yakin ingin menghapus gambar Apa Itu UPA?')) return;
+        setDeletingApaItuImage(true);
+        router.post('/admin/tentang-kami/delete-image', { type: 'apa_itu_image' }, {
+            onSuccess: () => {
+                setApaItuImagePreview(null);
+                setData('apa_itu_image', null);
+            },
+            onFinish: () => setDeletingApaItuImage(false),
+        });
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post('/admin/tentang-kami', {
@@ -90,6 +123,7 @@ export default function Form({
             onSuccess: () => {
                 if (fileRef.current) fileRef.current.value = '';
                 if (konselorFileRef.current) konselorFileRef.current.value = '';
+                if (apaItuFileRef.current) apaItuFileRef.current.value = '';
             }
         });
     };
@@ -145,6 +179,17 @@ export default function Form({
                         >
                             Konselor Sebaya
                         </button>
+                        {isSuperadminOrDeveloper && (
+                            <button
+                                type="button"
+                                onClick={() => setActiveTab('apaitu')}
+                                className={`px-8 py-5 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap ${
+                                    activeTab === 'apaitu' ? 'text-primary border-b-2 border-primary bg-white' : 'text-slate-500 hover:text-slate-800'
+                                }`}
+                            >
+                                Apa Itu UPA BK
+                            </button>
+                        )}
                     </div>
 
                     <div className="p-8 space-y-8">
@@ -349,6 +394,92 @@ export default function Form({
                                             {deletingKonselorImage ? 'Menghapus...' : 'Hapus Gambar Ini'}
                                         </button>
                                     )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB: APA ITU UPA BK (Superadmin/Developer Only) */}
+                        {isSuperadminOrDeveloper && activeTab === 'apaitu' && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <div className="bg-blue-50 text-blue-800 p-4 rounded-xl text-sm font-medium mb-6 flex items-start gap-3">
+                                    <span className="text-2xl">🔒</span>
+                                    <div>
+                                        <p className="font-bold">Akses Terbatas</p>
+                                        <p>Tab ini hanya dapat diakses oleh Superadmin dan Developer. Perubahan pada halaman ini akan langsung berdampak pada halaman utama (Beranda) website.</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-black text-slate-700 mb-2 uppercase tracking-wide">Judul Bagian</label>
+                                    <input
+                                        type="text"
+                                        value={data.apa_itu_title}
+                                        onChange={e => setData('apa_itu_title', e.target.value)}
+                                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 focus:border-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-100 transition-all font-medium text-slate-700"
+                                        placeholder="Contoh: Apa itu UPA BK UNM?"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-black text-slate-700 mb-2 uppercase tracking-wide">Deskripsi</label>
+                                    <div className="bg-white rounded-2xl overflow-hidden border border-slate-200">
+                                        <ReactQuill 
+                                            theme="snow" 
+                                            value={data.apa_itu_desc} 
+                                            onChange={val => setData('apa_itu_desc', val)}
+                                            modules={modules}
+                                            className="h-48"
+                                        />
+                                    </div>
+                                    <p className="mt-14 md:mt-12 text-sm text-slate-500">Penjelasan singkat tentang institusi UPA BK UNM.</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-black text-slate-700 mb-4 uppercase tracking-wide">Gambar Pendukung (Opsional)</label>
+                                    
+                                    <div className="flex flex-col md:flex-row gap-6">
+                                        <div className="w-full md:w-1/3">
+                                            {apaItuImagePreview ? (
+                                                <div className="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-white">
+                                                    <img src={apaItuImagePreview} alt="Preview Apa Itu" className="w-full h-auto object-cover" />
+                                                </div>
+                                            ) : (
+                                                <div className="w-full aspect-video bg-slate-100 rounded-2xl border-2 border-dashed border-slate-300 flex items-center justify-center text-slate-400 font-medium">
+                                                    Belum Ada Gambar
+                                                </div>
+                                            )}
+                                        </div>
+                                        
+                                        <div className="w-full md:w-2/3 space-y-4">
+                                            <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100 text-sm text-blue-800">
+                                                <p className="font-bold flex items-center gap-2 mb-1">💡 Info Gambar:</p>
+                                                <p>Jika Anda tidak mengunggah gambar, sistem akan secara otomatis menggunakan Logo UPA BK sebagai bawaan.</p>
+                                            </div>
+                                            <div className="flex gap-4 items-center">
+                                                <label className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-slate-100 px-5 py-3 font-bold text-slate-700 shadow-sm transition hover:bg-slate-200 hover:-translate-y-0.5 border border-slate-200">
+                                                    <RiImageAddLine size={20} />
+                                                    Pilih Gambar
+                                                    <input 
+                                                        type="file" 
+                                                        ref={apaItuFileRef} 
+                                                        accept="image/*" 
+                                                        onChange={handleApaItuFileChange} 
+                                                        className="hidden" 
+                                                    />
+                                                </label>
+                                            </div>
+                                            {errors.apa_itu_image && <p className="mt-2 text-sm text-red-500 font-bold">{errors.apa_itu_image}</p>}
+
+                                            {apaItuImagePreview && (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleDeleteApaItuImage}
+                                                    disabled={deletingApaItuImage}
+                                                    className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 border border-red-200 px-5 py-3 text-red-600 font-bold text-sm hover:bg-red-500 hover:text-white hover:border-red-500 transition-all disabled:opacity-60 disabled:cursor-wait"
+                                                >
+                                                    <RiDeleteBin6Line size={18} />
+                                                    {deletingApaItuImage ? 'Menghapus...' : 'Hapus Gambar Ini'}
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}

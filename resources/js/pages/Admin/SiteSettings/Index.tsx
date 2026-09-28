@@ -52,15 +52,15 @@ export default function Index({ data }: any) {
         <AdminLayout title="Situs & Kontak">
             <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
                 <div className="p-6 border-b border-slate-100 bg-slate-50">
-                    <h3 className="text-lg font-black text-slate-800 tracking-tight uppercase">Pengaturan Situs & Kontak</h3>
-                    <p className="text-sm text-slate-500 mt-1">Edit setiap pengaturan lalu klik "Simpan" untuk menyimpan perubahannya.</p>
+                    <h3 className="text-lg font-black text-slate-800 tracking-tight uppercase">Pengaturan Kontak</h3>
+                    <p className="text-sm text-slate-500 mt-1">Edit informasi kontak lalu klik "Simpan" untuk menyimpan perubahannya.</p>
                 </div>
                 <div className="p-6 space-y-4">
                     {data.map((item: any) => (
                         <SettingRow key={item.id} item={item} />
                     ))}
                     {data.length === 0 && (
-                        <p className="text-center text-slate-400 py-12 font-medium">Tidak ada pengaturan situs ditemukan.</p>
+                        <p className="text-center text-slate-400 py-12 font-medium">Tidak ada data kontak ditemukan.</p>
                     )}
                 </div>
             </div>

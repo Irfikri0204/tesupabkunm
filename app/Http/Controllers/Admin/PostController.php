@@ -82,4 +82,20 @@ class PostController extends Controller
         $post->delete();
         return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil dihapus.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) return redirect()->back();
+
+        $posts = Post::whereIn('id', $ids)->get();
+        foreach ($posts as $post) {
+            if ($post->cover_image) {
+                Storage::disk('public')->delete($post->cover_image);
+            }
+            $post->delete();
+        }
+
+        return redirect()->back()->with('success', count($ids) . ' berita berhasil dihapus.');
+    }
 }

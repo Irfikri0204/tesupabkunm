@@ -30,6 +30,18 @@ export default function Index({ data }: any) {
         }
     };
 
+    const handleBulkDelete = () => {
+        if (selected.length === 0) return;
+        if (confirm(`Yakin ingin menghapus ${selected.length} berita yang dipilih?`)) {
+            router.post('/admin/posts/bulk-delete', { ids: selected }, {
+                onSuccess: () => {
+                    setItems((prev: any[]) => prev.filter(i => !selected.includes(i.id)));
+                    setSelected([]);
+                }
+            });
+        }
+    };
+
     return (
         <AdminLayout title="Manajemen Berita">
             <div className="space-y-6">
@@ -39,6 +51,11 @@ export default function Index({ data }: any) {
                             <h3 className="text-lg font-black text-slate-800 tracking-tight uppercase flex items-center gap-2">
                                 <RiArticleLine size={20} className="text-purple-600" /> DAFTAR BERITA
                             </h3>
+                            {selected.length > 0 && (
+                                <button onClick={handleBulkDelete} className="text-xs bg-red-100 text-red-600 px-3 py-1.5 rounded-lg font-bold hover:bg-red-200 flex items-center gap-1 transition-colors">
+                                    <RiDeleteBinLine size={14} /> Hapus ({selected.length})
+                                </button>
+                            )}
                         </div>
                         <div className="flex items-center gap-3 flex-wrap">
                             <div className="relative">

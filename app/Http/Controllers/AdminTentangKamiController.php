@@ -22,6 +22,9 @@ class AdminTentangKamiController extends Controller
             'konselor_sebaya_title' => 'Teman Cerita Terpercaya',
             'konselor_sebaya_desc' => '<p>Konselor Sebaya (Peer Counselor) adalah mahasiswa terlatih yang siap mendengarkan, memahami, dan membantu rekan sesama mahasiswa dalam menghadapi berbagai tantangan perkuliahan maupun masalah pribadi.</p><p>Pendekatan sebaya menjadikan proses konseling terasa lebih hangat, nyaman, dan sejalan dengan realita dunia mahasiswa.</p>',
             'konselor_sebaya_image' => null,
+            'apa_itu_title' => 'Apa itu UPA BK UNM?',
+            'apa_itu_desc' => '<p class="text-slate-600 leading-relaxed text-lg mb-4">Unit Penunjang Akademik Bimbingan dan Konseling (UPA BK) Universitas Negeri Makassar hadir sebagai wujud nyata kepedulian universitas terhadap kesejahteraan psikologis dan pengembangan potensi setiap mahasiswa.</p><p class="text-slate-600 leading-relaxed">Kami menyediakan ruang yang aman, nyaman, dan rahasia bagi Anda untuk berbagi, mengeksplorasi diri, dan menemukan solusi atas berbagai tantangan akademik maupun pribadi. Bersama tenaga profesional dan konselor sebaya yang terlatih, kami siap mendampingi perjalanan Anda meraih kesuksesan di kampus.</p>',
+            'apa_itu_image' => null,
         ];
 
         $labels = [
@@ -35,6 +38,9 @@ class AdminTentangKamiController extends Controller
             'konselor_sebaya_title' => 'Judul Konselor Sebaya',
             'konselor_sebaya_desc' => 'Deskripsi Konselor Sebaya',
             'konselor_sebaya_image' => 'Gambar Konselor Sebaya',
+            'apa_itu_title' => 'Judul Apa Itu UPA BK',
+            'apa_itu_desc' => 'Deskripsi Apa Itu UPA BK',
+            'apa_itu_image' => 'Gambar Apa Itu UPA BK',
         ];
 
         $data = [];
@@ -45,7 +51,7 @@ class AdminTentangKamiController extends Controller
                 ['value' => $default, 'label' => $labels[$key]]
             );
             
-            if (in_array($key, ['struktur_organisasi_image', 'konselor_sebaya_image'])) {
+            if (in_array($key, ['struktur_organisasi_image', 'konselor_sebaya_image', 'apa_itu_image'])) {
                 $data[$key] = $setting->value ? asset('storage/' . $setting->value) : null;
             } else {
                 $data[$key] = $setting->value;
@@ -68,9 +74,12 @@ class AdminTentangKamiController extends Controller
             'konselor_sebaya_title' => 'nullable|string',
             'konselor_sebaya_desc' => 'nullable|string',
             'konselor_sebaya_image' => 'nullable|image|max:5120',
+            'apa_itu_title' => 'nullable|string',
+            'apa_itu_desc' => 'nullable|string',
+            'apa_itu_image' => 'nullable|image|max:5120',
         ]);
 
-        $keys = ['visi_text', 'misi_text', 'contact_address', 'contact_phone', 'contact_email', 'contact_instagram', 'konselor_sebaya_title', 'konselor_sebaya_desc'];
+        $keys = ['visi_text', 'misi_text', 'contact_address', 'contact_phone', 'contact_email', 'contact_instagram', 'konselor_sebaya_title', 'konselor_sebaya_desc', 'apa_itu_title', 'apa_itu_desc'];
 
         foreach ($keys as $key) {
             if ($request->has($key)) {
@@ -97,6 +106,14 @@ class AdminTentangKamiController extends Controller
             );
         }
 
+        if ($request->hasFile('apa_itu_image')) {
+            $path = $request->file('apa_itu_image')->store('tentang-kami', 'public');
+            SiteSetting::updateOrCreate(
+                ['key' => 'apa_itu_image'],
+                ['value' => $path]
+            );
+        }
+
         return redirect()->back()->with('success', 'Pengaturan Tentang Kami berhasil diperbarui.');
     }
 
@@ -104,7 +121,7 @@ class AdminTentangKamiController extends Controller
     {
         $type = $request->input('type', 'struktur_organisasi_image');
         
-        if (!in_array($type, ['struktur_organisasi_image', 'konselor_sebaya_image'])) {
+        if (!in_array($type, ['struktur_organisasi_image', 'konselor_sebaya_image', 'apa_itu_image'])) {
             return redirect()->back()->with('error', 'Tipe gambar tidak valid.');
         }
 

@@ -1,8 +1,12 @@
 import React from 'react';
 import AppLayout from '@/Layouts/AppLayout';
 import { RiMapPinLine, RiPhoneLine, RiMailSendLine, RiInstagramLine } from '@remixicon/react';
+import { usePage } from '@inertiajs/react';
 
-export default function Kontak({ contact }: { contact?: Record<string, string> }) {
+export default function Kontak() {
+    const { contact_info } = usePage().props as any;
+    const contact = contact_info || {};
+
     const formatAlamat = (alamat: string) => {
         if (!alamat || alamat === '-') return 'Alamat belum diatur';
         return alamat.split('\n').map((line, i) => (
@@ -51,7 +55,7 @@ export default function Kontak({ contact }: { contact?: Record<string, string> }
                             <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
                                 <RiPhoneLine className="w-8 h-8" />
                             </div>
-                            <h3 className="font-bold text-slate-900 text-lg mb-3">Telepon / WhatsApp</h3>
+                            <h3 className="font-bold text-slate-900 text-lg mb-3">Telepon</h3>
                             <p className="text-slate-500 text-sm leading-relaxed">{contact?.phone || 'Belum diatur'}</p>
                         </div>
 
@@ -65,12 +69,12 @@ export default function Kontak({ contact }: { contact?: Record<string, string> }
                         </a>
 
                         {/* Instagram */}
-                        <a href={`https://instagram.com/${(contact?.instagram || '').replace('@', '')}`} target="_blank" rel="noreferrer" className="block bg-white rounded-[2rem] p-8 shadow-lg shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:-translate-y-2 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
+                        <a href={contact?.instagram_url || '#'} target="_blank" rel="noreferrer" className="block bg-white rounded-[2rem] p-8 shadow-lg shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:-translate-y-2 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
                             <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
                                 <RiInstagramLine className="w-8 h-8" />
                             </div>
                             <h3 className="font-bold text-slate-900 text-lg mb-3">Instagram</h3>
-                            <p className="text-slate-500 text-sm leading-relaxed group-hover:text-primary transition-colors">{contact?.instagram || 'Belum diatur'}</p>
+                            <p className="text-slate-500 text-sm leading-relaxed group-hover:text-primary transition-colors">{contact?.instagram_url ? (contact?.instagram_url.split('/').pop() || 'Instagram') : 'Belum diatur'}</p>
                         </a>
                     </div>
                 </div>

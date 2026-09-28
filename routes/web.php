@@ -85,13 +85,7 @@ Route::get('/konselor-sebaya', function () {
 })->name('konselor-sebaya');
 
 Route::get('/kontak', function () {
-    $contact = [
-        'address' => SiteSetting::getValue('contact_address', '-'),
-        'phone' => SiteSetting::getValue('contact_phone', '-'),
-        'email' => SiteSetting::getValue('contact_email', '-'),
-        'instagram' => SiteSetting::getValue('contact_instagram', '-'),
-    ];
-    return Inertia::render('Kontak', ['contact' => $contact]);
+    return Inertia::render('Kontak');
 })->name('kontak');
 
 Route::get('/about', function () {
@@ -312,9 +306,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('swls/bulk-delete', [AdminSwlsController::class, 'bulkDestroy'])->name('swls.bulk-delete');
         Route::resource('swls', AdminSwlsController::class)->only(['index', 'show', 'destroy']);
         // Posts
+        Route::post('posts/bulk-delete', [PostController::class, 'bulkDestroy'])->name('posts.bulk-delete');
         Route::resource('posts', PostController::class);
 
         // Modules
+        Route::post('moduls/bulk-delete', [ModulController::class, 'bulkDestroy'])->name('moduls.bulk-delete');
         Route::resource('moduls', ModulController::class);
 
         // Web Lainnya

@@ -15,7 +15,7 @@ export default function AdminLayout({ children, title }: { children: React.React
         { name: 'Modul', path: '/admin/moduls', icon: <RiBookOpenLine size={20} /> },
         { name: 'Web Lainnya', path: '/admin/linked-websites', icon: <RiGlobalLine size={20} /> },
         { name: 'Pengaturan Tes', path: '/admin/test-settings', icon: <RiSettings3Line size={20} /> },
-        { name: 'Situs & Kontak', path: '/admin/site-settings', icon: <RiSettings3Line size={20} /> },
+        { name: 'Kontak', path: '/admin/site-settings', icon: <RiSettings3Line size={20} /> },
     ];
 
     const testMenuItems = [

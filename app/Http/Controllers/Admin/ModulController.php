@@ -92,4 +92,21 @@ class ModulController extends Controller
         $modul->delete();
         return redirect()->route('admin.moduls.index')->with('success', 'Modul berhasil dihapus.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) return redirect()->back();
+
+        $moduls = Modul::whereIn('id', $ids)->get();
+        foreach ($moduls as $modul) {
+            Storage::disk('public')->delete($modul->file_path);
+            if ($modul->cover_image) {
+                Storage::disk('public')->delete($modul->cover_image);
+            }
+            $modul->delete();
+        }
+
+        return redirect()->back()->with('success', count($ids) . ' modul berhasil dihapus.');
+    }
 }
