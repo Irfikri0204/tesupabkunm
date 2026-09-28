@@ -111,7 +111,7 @@ export default function Header() {
                         </button>
 
                         {isDropdownOpen && (
-                            <div className="absolute left-0 mt-2 w-64 flex-col overflow-hidden rounded-2xl bg-white text-slate-800 shadow-2xl border border-slate-100 py-2">
+                            <div className="absolute right-0 mt-2 w-64 flex-col overflow-hidden rounded-2xl bg-white text-slate-800 shadow-2xl border border-slate-100 py-2">
                                 {allTests.length > 0 ? (
                                     allTests.map((test: any, idx: number) => (
                                         <Link key={idx} href={test.url} className="block px-5 py-2.5 text-sm font-medium hover:bg-purple-50 hover:text-primary transition-colors">
