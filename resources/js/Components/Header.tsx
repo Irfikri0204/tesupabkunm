@@ -14,6 +14,7 @@ export default function Header() {
         'swls': '/tes/swls',
         'srq20': '/tes/srq20',
         'kecerdasan-majemuk': '/tes/kecerdasan-majemuk',
+        'identifikasi-masalah': '/tes/identifikasi-masalah/universitas-negeri-makassar',
     };
 
     // Menggabungkan tes built-in

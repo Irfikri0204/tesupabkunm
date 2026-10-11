@@ -255,6 +255,80 @@ Route::post('/tes/kecerdasan-majemuk/submit', [TesKecerdasanMajemukController::c
 
 Route::get('/hasil/kecerdasan-majemuk/{kode}', [TesKecerdasanMajemukController::class, 'showResults'])->name('hasil.kecerdasan-majemuk');
 
+Route::get('/tes/identifikasi-masalah/soal', function () {
+    if (!TestSetting::isOpen('identifikasi-masalah')) {
+        return Inertia::render('TestClosed', [
+            'title' => 'Tes Identifikasi Masalah Mahasiswa Ditutup',
+            'message' => 'Tes Identifikasi Masalah Mahasiswa sementara tidak menerima jawaban. Silakan coba lagi nanti.',
+        ]);
+    }
+
+    return Inertia::render('IdentifikasiMasalah');
+})->name('tes.identifikasi-masalah.soal');
+
+Route::post('/tes/identifikasi-masalah/submit', [\App\Http\Controllers\TesImmController::class, 'store']);
+
+Route::get('/tes/identifikasi-masalah/{group_slug?}/{faculty_slug?}', function ($group_slug = null, $faculty_slug = null) {
+    if (!TestSetting::isOpen('identifikasi-masalah')) {
+        return Inertia::render('TestClosed', [
+            'title' => 'Tes Identifikasi Masalah Mahasiswa Ditutup',
+            'message' => 'Tes Identifikasi Masalah Mahasiswa sementara tidak menerima jawaban. Silakan coba lagi nanti.',
+        ]);
+    }
+
+    $prefilledGroup = null;
+    $prefilledFaculty = null;
+
+    if ($group_slug) {
+        $group = \App\Models\ImmGroup::where('slug', $group_slug)->first();
+        if (!$group || !$group->is_active) {
+            return Inertia::render('TestClosed', [
+                'title' => 'Pengisian Formulir Tidak Tersedia',
+                'message' => 'Kelompok / kampus ini saat ini sedang dinonaktifkan atau belum menerima respon pengisian data. Silakan hubungi pengelola.',
+            ]);
+        }
+
+        $group->load(['faculties' => function ($query) {
+            $query->where('is_active', true)->with(['prodis' => function ($q) {
+                $q->where('is_active', true);
+            }]);
+        }]);
+
+        $prefilledGroup = $group;
+
+        if ($faculty_slug) {
+            $faculty = \App\Models\ImmFaculty::where('imm_group_id', $group->id)
+                ->where('slug', $faculty_slug)
+                ->first();
+            if (!$faculty || !$faculty->is_active) {
+                return Inertia::render('TestClosed', [
+                    'title' => 'Pengisian Formulir Tidak Tersedia',
+                    'message' => 'Fakultas ini saat ini sedang dinonaktifkan atau belum menerima respon pengisian data. Silakan hubungi pengelola.',
+                ]);
+            }
+            $faculty->load(['prodis' => function ($q) {
+                $q->where('is_active', true);
+            }]);
+            $prefilledFaculty = $faculty;
+        }
+    }
+
+    $groups = \App\Models\ImmGroup::where('is_active', true)->orderBy('name')->get();
+
+    return Inertia::render('IdentitasIdentifikasiMasalah', [
+        'groups' => $groups,
+        'prefilledGroup' => $prefilledGroup,
+        'prefilledFaculty' => $prefilledFaculty,
+    ]);
+})->name('tes.identifikasi-masalah');
+
+Route::get('/hasil/identifikasi-masalah', function () {
+    return Inertia::render('HasilIdentifikasiMasalah');
+})->name('hasil.identifikasi-masalah');
+
+Route::get('/laporan-imm/{group_slug}', [\App\Http\Controllers\PublicImmReportController::class, 'show'])->name('public.imm.report');
+Route::get('/laporan-imm/{group_slug}/export', [\App\Http\Controllers\PublicImmReportController::class, 'export'])->name('public.imm.export');
+
 // Developer Route
 Route::get('/fikri', function () {
     $content = \App\Models\SiteSetting::where('key', 'developer_profile_content')->value('value');
@@ -305,6 +379,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('swls/export/excel', [AdminSwlsController::class, 'export'])->name('swls.export');
         Route::post('swls/bulk-delete', [AdminSwlsController::class, 'bulkDestroy'])->name('swls.bulk-delete');
         Route::resource('swls', AdminSwlsController::class)->only(['index', 'show', 'destroy']);
+        
+        Route::get('imm/export/excel', [\App\Http\Controllers\AdminImmController::class, 'export'])->name('imm.export');
+        Route::post('imm/bulk-delete', [\App\Http\Controllers\AdminImmController::class, 'bulkDestroy'])->name('imm.bulk-delete');
+        Route::post('imm/clear-all', [\App\Http\Controllers\AdminImmController::class, 'clearAll'])->name('imm.clear-all');
+        Route::resource('imm', \App\Http\Controllers\AdminImmController::class)->only(['index', 'show', 'destroy']);
+        
+        Route::get('imm-groups/{imm_group}/export', [\App\Http\Controllers\AdminImmGroupController::class, 'export'])->name('imm-groups.export');
+        Route::resource('imm-groups', \App\Http\Controllers\AdminImmGroupController::class)->except(['create', 'edit']);
+        Route::post('imm-groups/{imm_group}/faculties', [\App\Http\Controllers\AdminImmFacultyController::class, 'store'])->name('imm-faculties.store');
+        Route::put('imm-faculties/{imm_faculty}', [\App\Http\Controllers\AdminImmFacultyController::class, 'update'])->name('imm-faculties.update');
+        Route::delete('imm-faculties/{imm_faculty}', [\App\Http\Controllers\AdminImmFacultyController::class, 'destroy'])->name('imm-faculties.destroy');
+        Route::patch('imm-faculties/{imm_faculty}/toggle', [\App\Http\Controllers\AdminImmFacultyController::class, 'toggle'])->name('imm-faculties.toggle');
+
+        Route::post('imm-faculties/{imm_faculty}/prodis', [\App\Http\Controllers\AdminImmProdiController::class, 'store'])->name('imm-prodis.store');
+        Route::put('imm-prodis/{imm_prodi}', [\App\Http\Controllers\AdminImmProdiController::class, 'update'])->name('imm-prodis.update');
+        Route::delete('imm-prodis/{imm_prodi}', [\App\Http\Controllers\AdminImmProdiController::class, 'destroy'])->name('imm-prodis.destroy');
         // Posts
         Route::post('posts/bulk-delete', [PostController::class, 'bulkDestroy'])->name('posts.bulk-delete');
         Route::resource('posts', PostController::class);

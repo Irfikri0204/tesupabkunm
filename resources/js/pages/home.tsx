@@ -19,7 +19,8 @@ import {
     RiTimeLine,
     RiClipboardLine,
     RiArrowRightLine,
-    RiGlobalLine
+    RiGlobalLine,
+    RiSurveyLine
 } from '@remixicon/react';
 
 type TeamMember = {
@@ -79,6 +80,12 @@ const BUILTIN_TESTS: Record<string, { title: string; description: string; href: 
         description: 'Kenali jenis kecerdasan dominanmu berdasarkan teori Multiple Intelligences.',
         href: '/tes/kecerdasan-majemuk',
         icon: <RiMindMap className="h-8 w-8" />,
+    },
+    'identifikasi-masalah': {
+        title: 'Sistem Identifikasi Kondisi - Mahasiswa (SIK-M)',
+        description: 'Identifikasi potensi kendala akademik, pribadi, sosial, dan risiko perkuliahan untuk pendampingan tepat sasaran.',
+        href: '/tes/identifikasi-masalah/universitas-negeri-makassar',
+        icon: <RiSurveyLine className="h-8 w-8" />,
     },
 };
 
