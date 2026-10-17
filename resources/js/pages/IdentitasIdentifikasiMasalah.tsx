@@ -18,6 +18,7 @@ export default function IdentitasIdentifikasiMasalah({ groups = [], prefilledGro
         jenis_kelamin: '',
         tempat_tinggal: '',
         nomor_hp: '',
+        email: '',
         status_bekerja: '',
         status_pernikahan: '',
         penyandang_disabilitas: '',
@@ -285,10 +286,16 @@ export default function IdentitasIdentifikasiMasalah({ groups = [], prefilledGro
                                             <RiUserLine className="text-blue-500" /> Data Pribadi
                                         </h2>
                                         
-                                        <label className="block mb-6 md:w-1/2 md:pr-3">
-                                            <span className="mb-2 block text-sm font-bold text-slate-700">Nomor HP / WhatsApp <span className="text-red-500">*</span></span>
-                                            <input type="text" name="nomor_hp" value={formData.nomor_hp} onChange={handleInputChange} placeholder="628xxxxxxxxxx" required className="w-full rounded-xl border-slate-200 bg-slate-50 p-3.5 text-slate-800 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all" />
-                                        </label>
+                                        <div className="grid md:grid-cols-2 gap-6 mb-6">
+                                            <label className="block">
+                                                <span className="mb-2 block text-sm font-bold text-slate-700">Nomor HP / WhatsApp <span className="text-red-500">*</span></span>
+                                                <input type="text" name="nomor_hp" value={formData.nomor_hp} onChange={handleInputChange} placeholder="628xxxxxxxxxx" required className="w-full rounded-xl border-slate-200 bg-slate-50 p-3.5 text-slate-800 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all" />
+                                            </label>
+                                            <label className="block">
+                                                <span className="mb-2 block text-sm font-bold text-slate-700">Email <span className="text-red-500">*</span></span>
+                                                <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="nama@email.com" required className="w-full rounded-xl border-slate-200 bg-slate-50 p-3.5 text-slate-800 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all" />
+                                            </label>
+                                        </div>
 
                                         <RadioGroup name="jenis_kelamin" label="Jenis Kelamin" options={['Laki-laki', 'Perempuan']} />
                                         
@@ -359,7 +366,7 @@ export default function IdentitasIdentifikasiMasalah({ groups = [], prefilledGro
                                     <button onClick={handlePrev} className="rounded-2xl border-2 border-slate-200 px-8 py-4 font-bold text-slate-500 hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95">Kembali</button>
                                     <button 
                                         onClick={handleNext}
-                                        disabled={!formData.nama || !formData.nim || !formData.fakultas || !formData.program_studi || !formData.semester || !formData.jenis_kelamin || !formData.tempat_tinggal || !formData.nomor_hp || !formData.status_bekerja || !formData.status_pernikahan || !formData.penyandang_disabilitas || !formData.penerima_beasiswa || !formData.status_semester_lalu || (formData.penyandang_disabilitas === 'Ya' && !formData.disabilitas_jenis)}
+                                        disabled={!formData.nama || !formData.nim || !formData.fakultas || !formData.program_studi || !formData.semester || !formData.jenis_kelamin || !formData.tempat_tinggal || !formData.nomor_hp || !formData.email || !formData.status_bekerja || !formData.status_pernikahan || !formData.penyandang_disabilitas || !formData.penerima_beasiswa || !formData.status_semester_lalu || (formData.penyandang_disabilitas === 'Ya' && !formData.disabilitas_jenis)}
                                         className="rounded-2xl bg-blue-600 px-10 py-4 font-bold text-white shadow-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-blue-500/30 flex items-center justify-center gap-2 active:scale-95 disabled:active:scale-100"
                                     >
                                         Lanjut ke Petunjuk <RiArrowRightLine size={20} />

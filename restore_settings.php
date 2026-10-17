@@ -14,6 +14,7 @@ $tests = [
     ['slug' => 'swls', 'name' => 'Kepuasan Hidup (SWLS)', 'is_open' => true],
     ['slug' => 'srq20', 'name' => 'Kesehatan Mental (SRQ-20)', 'is_open' => true],
     ['slug' => 'kecerdasan-majemuk', 'name' => 'Kecerdasan Majemuk', 'is_open' => true],
+    ['slug' => 'identifikasi-masalah', 'name' => 'Sistem Identifikasi Kondisi Mahasiswa (SIKOM)', 'is_open' => true],
     // Slug baru (dari dynamic test seeder)
     ['slug' => 'gaya-belajar', 'name' => 'Tes Gaya Belajar (VAK)', 'is_open' => true],
     ['slug' => 'srq-20', 'name' => 'Kesehatan Mental (SRQ-20)', 'is_open' => true],

@@ -132,5 +132,9 @@ export const immInterpretations: any = {
                 'Bila diteror penagih utang, simpan buktinya dan lapor ke OJK (157).'
             ]
         }
-    }
+    },
 };
+
+immInterpretations['Lainnya (Perilaku Berisiko)'] = immInterpretations['Lainnya'];
+immInterpretations['Bidang Lainnya (Perilaku Berisiko)'] = immInterpretations['Lainnya'];
+

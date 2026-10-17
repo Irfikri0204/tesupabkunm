@@ -1,6 +1,6 @@
 import AdminLayout from '@/layouts/AdminLayout';
 import { Link, useForm, router } from '@inertiajs/react';
-import { RiAddLine, RiDeleteBinLine, RiEdit2Line, RiBarChartBoxLine } from '@remixicon/react';
+import { RiAddLine, RiDeleteBinLine, RiEdit2Line, RiBarChartBoxLine, RiPrinterLine } from '@remixicon/react';
 import React, { useState } from 'react';
 
 export default function ImmGroupsIndex({ groups }: any) {
@@ -48,10 +48,10 @@ export default function ImmGroupsIndex({ groups }: any) {
     };
 
     return (
-        <AdminLayout title="Kelola Kampus / Kelompok Data SIK-M">
+        <AdminLayout title="Kelola Kampus / Kelompok Data SIKOM">
             <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden max-w-5xl mx-auto">
                 <div className="p-6 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-                    <h3 className="text-lg font-black text-slate-800 tracking-tight uppercase">Daftar Kampus / Kelompok SIK-M</h3>
+                    <h3 className="text-lg font-black text-slate-800 tracking-tight uppercase">Daftar Kampus / Kelompok SIKOM</h3>
                     <button onClick={openCreate} className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-700 hover:shadow-lg transition-all active:scale-95">
                         <RiAddLine size={18} /> Tambah Kampus Baru
                     </button>
@@ -86,6 +86,9 @@ export default function ImmGroupsIndex({ groups }: any) {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex justify-end gap-1">
+                                            <a href={`/admin/imm-groups/${group.id}/profiling-report`} target="_blank" rel="noopener noreferrer" className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Cetak Laporan Profiling (PDF)">
+                                                <RiPrinterLine size={18} />
+                                            </a>
                                             <Link href={`/admin/imm-groups/${group.id}`} className="p-2 text-indigo-500 hover:bg-indigo-50 rounded-lg transition-colors" title="Lihat Kelompok & Analitik">
                                                 <RiBarChartBoxLine size={18} />
                                             </Link>

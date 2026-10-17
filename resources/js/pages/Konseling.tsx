@@ -12,7 +12,7 @@ interface Info {
     konseling_info_email?: string;
 }
 
-export default function Konseling({ fakultas, info = {} }: { fakultas: { id: number, name: string }[], info?: Info }) {
+export default function Konseling({ fakultas, info = {} }: { fakultas: { id: number, name: string, prodis?: { id: number, name: string }[] }[], info?: Info }) {
     const { flash } = usePage<{ flash: { success?: boolean } }>().props;
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -264,13 +264,33 @@ export default function Konseling({ fakultas, info = {} }: { fakultas: { id: num
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-bold text-slate-700 mb-2">Program Studi <span className="text-red-500">*</span></label>
-                                                    <input 
-                                                        type="text" 
-                                                        value={data.prodi}
-                                                        onChange={e => setData('prodi', e.target.value)}
-                                                        className={`w-full rounded-xl border ${errors.prodi ? 'border-red-300 focus:ring-red-100' : 'border-slate-200 focus:border-primary focus:ring-primary/20'} bg-slate-50 p-3.5 transition-all outline-none focus:ring-4`}
-                                                        placeholder="Misal: Psikologi"
-                                                    />
+                                                    {(() => {
+                                                        const currentFakultas = fakultas.find(f => f.name === data.fakultas);
+                                                        const prodiList = currentFakultas?.prodis || [];
+                                                        if (prodiList.length > 0) {
+                                                            return (
+                                                                <select 
+                                                                    value={data.prodi}
+                                                                    onChange={e => setData('prodi', e.target.value)}
+                                                                    className={`w-full rounded-xl border ${errors.prodi ? 'border-red-300 focus:ring-red-100' : 'border-slate-200 focus:border-primary focus:ring-primary/20'} bg-slate-50 p-3.5 transition-all outline-none focus:ring-4`}
+                                                                >
+                                                                    <option value="">Pilih Program Studi...</option>
+                                                                    {prodiList.map(p => (
+                                                                        <option key={p.id} value={p.name}>{p.name}</option>
+                                                                    ))}
+                                                                </select>
+                                                            );
+                                                        }
+                                                        return (
+                                                            <input 
+                                                                type="text" 
+                                                                value={data.prodi}
+                                                                onChange={e => setData('prodi', e.target.value)}
+                                                                className={`w-full rounded-xl border ${errors.prodi ? 'border-red-300 focus:ring-red-100' : 'border-slate-200 focus:border-primary focus:ring-primary/20'} bg-slate-50 p-3.5 transition-all outline-none focus:ring-4`}
+                                                                placeholder="Misal: Psikologi"
+                                                            />
+                                                        );
+                                                    })()}
                                                     {errors.prodi && <p className="mt-1 text-sm text-red-500">{errors.prodi}</p>}
                                                 </div>
                                                 <div>

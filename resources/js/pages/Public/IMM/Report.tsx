@@ -13,18 +13,31 @@ export default function Report({ group, faculties, facultyStats, totalResponses,
     const [selectedStudent, setSelectedStudent] = useState<any>(null);
 
     const COLORS: Record<string, string> = {
+        'Baik': '#10b981',
+        'Perlu Perhatian': '#f59e0b',
+        'Perlu Bantuan': '#ef4444',
         'Kondisi Baik': '#10b981',
         'Perlu Perhatian Khusus': '#f59e0b',
         'Perlu Bantuan Segera': '#ef4444',
+        'Perlu Pendampingan': '#ef4444',
         'Risiko rendah': '#10b981',
         'Risiko sedang': '#f59e0b',
         'Risiko tinggi': '#ef4444',
     };
 
-    const classificationData = Object.keys(classificationCounts).map(key => ({
-        name: key,
-        value: classificationCounts[key]
-    }));
+    // Normalize into 3 categories: Baik, Perlu Perhatian, Perlu Bantuan
+    const normalizedClassificationCounts: Record<string, number> = {
+        'Baik': (classificationCounts['Baik'] || 0) + (classificationCounts['Kondisi Baik'] || 0),
+        'Perlu Perhatian': (classificationCounts['Perlu Perhatian'] || 0) + (classificationCounts['Perlu Perhatian Khusus'] || 0),
+        'Perlu Bantuan': (classificationCounts['Perlu Bantuan'] || 0) + (classificationCounts['Perlu Pendampingan'] || 0) + (classificationCounts['Perlu Bantuan Segera'] || 0),
+    };
+
+    const classificationData = ['Baik', 'Perlu Perhatian', 'Perlu Bantuan']
+        .map(key => ({
+            name: key,
+            value: normalizedClassificationCounts[key] || 0
+        }))
+        .filter(entry => entry.value > 0);
 
     const dropoutData = Object.keys(dropoutCounts).map(key => ({
         name: key,
@@ -45,7 +58,7 @@ export default function Report({ group, faculties, facultyStats, totalResponses,
                             <RiDashboardLine size={24} />
                         </div>
                         <div>
-                            <h1 className="text-lg font-black tracking-tight text-slate-800 uppercase">Laporan SIK-M</h1>
+                            <h1 className="text-lg font-black tracking-tight text-slate-800 uppercase">Laporan SIKOM</h1>
                             <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{group.name}</p>
                         </div>
                     </div>
@@ -59,7 +72,7 @@ export default function Report({ group, faculties, facultyStats, totalResponses,
                 <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-8 text-white shadow-xl shadow-blue-900/10 flex flex-col md:flex-row items-center justify-between gap-6">
                     <div>
                         <h2 className="text-3xl font-black">{group.name}</h2>
-                        <p className="text-white/80 mt-2 font-medium">Laporan Hasil Sistem Identifikasi Kondisi - Mahasiswa (SIK-M)</p>
+                        <p className="text-white/80 mt-2 font-medium">Laporan Hasil Sistem Identifikasi Kondisi Mahasiswa (SIKOM)</p>
                     </div>
                     <div className="bg-white/20 backdrop-blur px-6 py-4 rounded-2xl text-center min-w-[150px]">
                         <p className="text-sm font-bold text-white/80 mb-1 uppercase tracking-widest">Total Responden</p>
@@ -375,7 +388,8 @@ export default function Report({ group, faculties, facultyStats, totalResponses,
                                     <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors">Cari</button>
                                 </form>
                             </div>
-                            <div className="overflow-x-auto">
+                            {/* Desktop Table */}
+                            <div className="hidden md:block overflow-x-auto">
                                 <table className="w-full text-left text-sm">
                                     <thead className="bg-slate-50 text-slate-500 font-black uppercase tracking-wider text-xs border-b border-slate-200">
                                         <tr>
@@ -398,7 +412,7 @@ export default function Report({ group, faculties, facultyStats, totalResponses,
                                                 <td className="px-6 py-4 text-slate-600">{s.program_studi}</td>
                                                 <td className="px-6 py-4 text-center font-black text-blue-600">{s.total_score}/225</td>
                                                 <td className="px-6 py-4 text-center">
-                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${
                                                         s.total_classification === 'Kondisi Baik' ? 'bg-emerald-100 text-emerald-700' :
                                                         s.total_classification === 'Perlu Perhatian Khusus' ? 'bg-amber-100 text-amber-700' :
                                                         'bg-red-100 text-red-700'
@@ -407,7 +421,7 @@ export default function Report({ group, faculties, facultyStats, totalResponses,
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 text-center">
-                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${
                                                         s.dropout_risk_classification === 'Risiko rendah' || s.dropout_risk_classification === 'Aman' ? 'bg-emerald-100 text-emerald-700' :
                                                         s.dropout_risk_classification === 'Risiko sedang' ? 'bg-amber-100 text-amber-700' :
                                                         'bg-red-100 text-red-700'
@@ -434,6 +448,50 @@ export default function Report({ group, faculties, facultyStats, totalResponses,
                                         )}
                                     </tbody>
                                 </table>
+                            </div>
+
+                            {/* Mobile Cards */}
+                            <div className="md:hidden divide-y divide-slate-100">
+                                {students?.data?.map((s: any) => (
+                                    <div key={s.id} className="p-4 space-y-3">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="min-w-0">
+                                                <p className="font-bold text-slate-800 truncate">{s.nama}</p>
+                                                <p className="text-xs text-slate-500 font-mono">{s.nim}</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setSelectedStudent(s)}
+                                                className="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-xl text-xs font-bold shadow-sm"
+                                            >
+                                                <RiEyeLine size={14} /> Detail
+                                            </button>
+                                        </div>
+                                        <div className="text-xs text-slate-500 space-y-0.5">
+                                            <p>{s.fakultas} — {s.program_studi}</p>
+                                        </div>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className="text-sm font-black text-blue-600">{s.total_score}/225</span>
+                                            <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                                                s.total_classification === 'Kondisi Baik' ? 'bg-emerald-100 text-emerald-700' :
+                                                s.total_classification === 'Perlu Perhatian Khusus' ? 'bg-amber-100 text-amber-700' :
+                                                'bg-red-100 text-red-700'
+                                            }`}>
+                                                {s.total_classification}
+                                            </span>
+                                            <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                                                s.dropout_risk_classification === 'Risiko rendah' || s.dropout_risk_classification === 'Aman' ? 'bg-emerald-100 text-emerald-700' :
+                                                s.dropout_risk_classification === 'Risiko sedang' ? 'bg-amber-100 text-amber-700' :
+                                                'bg-red-100 text-red-700'
+                                            }`}>
+                                                {s.dropout_risk_classification}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                                {(!students?.data || students.data.length === 0) && (
+                                    <div className="px-6 py-12 text-center text-slate-400 font-medium">Belum ada data mahasiswa.</div>
+                                )}
                             </div>
 
                             {/* Pagination */}

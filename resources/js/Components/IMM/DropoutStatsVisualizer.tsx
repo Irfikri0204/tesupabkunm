@@ -179,7 +179,7 @@ export default function DropoutStatsVisualizer({ data, compact = false }: Dropou
                     </div>
 
                     {/* 3 Detailed Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                    <div className={`grid gap-3 pt-1 ${compact ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-3'}`}>
                         {CATEGORIES.map((cat) => {
                             const count = data?.[cat.key as keyof typeof data] ?? 0;
                             const pct = total > 0 ? Math.round((count / total) * 100) : 0;
@@ -188,22 +188,26 @@ export default function DropoutStatsVisualizer({ data, compact = false }: Dropou
                             return (
                                 <div
                                     key={cat.key}
-                                    className={`${cat.bg} p-4 rounded-xl border ${cat.border} flex flex-col justify-between shadow-xs`}
+                                    className={`${cat.bg} rounded-xl border ${cat.border} shadow-xs ${
+                                        compact
+                                            ? 'flex flex-row items-center gap-4 p-3 sm:flex-col sm:items-stretch sm:p-4'
+                                            : 'p-4 flex flex-col justify-between'
+                                    }`}
                                 >
-                                    <div>
-                                        <div className="flex items-center justify-between mb-2">
+                                    <div className={compact ? 'flex-shrink-0' : ''}>
+                                        <div className="flex items-center justify-between mb-1 sm:mb-2">
                                             <div className="flex items-center gap-1.5">
-                                                <Icon size={16} className={cat.text} />
+                                                <Icon size={compact ? 14 : 16} className={cat.text} />
                                                 <span className={`font-black text-xs ${cat.text} uppercase tracking-wider`}>
                                                     {cat.label}
                                                 </span>
                                             </div>
-                                            <span className="text-[10px] font-bold text-slate-500 bg-white/80 px-2 py-0.5 rounded-full border border-slate-200/50">
+                                            <span className="text-[10px] font-bold text-slate-500 bg-white/80 px-2 py-0.5 rounded-full border border-slate-200/50 hidden sm:inline">
                                                 Skor {cat.scoreRange}
                                             </span>
                                         </div>
                                         <div className="flex items-baseline gap-2 my-1">
-                                            <span className={`text-2xl font-black ${cat.text}`}>
+                                            <span className={`${compact ? 'text-xl' : 'text-2xl'} font-black ${cat.text}`}>
                                                 {count}
                                             </span>
                                             <span className="text-xs font-bold text-slate-500">
@@ -211,7 +215,11 @@ export default function DropoutStatsVisualizer({ data, compact = false }: Dropou
                                             </span>
                                         </div>
                                     </div>
-                                    <p className="text-[11px] text-slate-600 mt-2 pt-2 border-t border-slate-200/60 leading-relaxed font-medium">
+                                    <p className={`text-[11px] text-slate-600 leading-relaxed font-medium ${
+                                        compact
+                                            ? 'hidden sm:block sm:mt-2 sm:pt-2 sm:border-t sm:border-slate-200/60'
+                                            : 'mt-2 pt-2 border-t border-slate-200/60'
+                                    }`}>
                                         {cat.desc}
                                     </p>
                                 </div>

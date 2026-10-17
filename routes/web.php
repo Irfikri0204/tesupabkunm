@@ -93,7 +93,7 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::get('/konseling', function () {
-    $fakultas = \App\Models\Fakultas::orderBy('name')->get();
+    $fakultas = \App\Models\Fakultas::with('prodis')->orderBy('name')->get();
     $info = \App\Models\SiteSetting::whereIn('key', [
         'konseling_info_jam',
         'konseling_info_lokasi',
@@ -386,6 +386,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('imm', \App\Http\Controllers\AdminImmController::class)->only(['index', 'show', 'destroy']);
         
         Route::get('imm-groups/{imm_group}/export', [\App\Http\Controllers\AdminImmGroupController::class, 'export'])->name('imm-groups.export');
+        Route::get('imm-groups/{imm_group}/profiling-report', [\App\Http\Controllers\AdminImmGroupController::class, 'profilingReport'])->name('imm-groups.profiling-report');
         Route::resource('imm-groups', \App\Http\Controllers\AdminImmGroupController::class)->except(['create', 'edit']);
         Route::post('imm-groups/{imm_group}/faculties', [\App\Http\Controllers\AdminImmFacultyController::class, 'store'])->name('imm-faculties.store');
         Route::put('imm-faculties/{imm_faculty}', [\App\Http\Controllers\AdminImmFacultyController::class, 'update'])->name('imm-faculties.update');
@@ -418,6 +419,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('konseling', \App\Http\Controllers\AdminCounselingController::class)->only(['index', 'update']);
 
         Route::resource('fakultas', \App\Http\Controllers\AdminFakultasController::class)->except(['create', 'show', 'edit']);
+        Route::post('prodis', [\App\Http\Controllers\AdminProdiController::class, 'store'])->name('prodis.store');
+        Route::put('prodis/{prodi}', [\App\Http\Controllers\AdminProdiController::class, 'update'])->name('prodis.update');
+        Route::delete('prodis/{prodi}', [\App\Http\Controllers\AdminProdiController::class, 'destroy'])->name('prodis.destroy');
 
         Route::get('konseling-info', [\App\Http\Controllers\AdminKonselingInfoController::class, 'edit'])->name('konseling-info.edit');
         Route::post('konseling-info', [\App\Http\Controllers\AdminKonselingInfoController::class, 'update'])->name('konseling-info.update');

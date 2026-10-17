@@ -56,6 +56,7 @@ class TesImmController extends Controller
             'jenis_kelamin' => $userData['jenis_kelamin'] ?? null,
             'tempat_tinggal' => $userData['tempat_tinggal'] ?? null,
             'nomor_hp' => $userData['nomor_hp'] ?? null,
+            'email' => $userData['email'] ?? null,
             'status_bekerja' => $userData['status_bekerja'] ?? null,
             'status_pernikahan' => $userData['status_pernikahan'] ?? null,
             'penyandang_disabilitas' => $userData['penyandang_disabilitas'] ?? null,

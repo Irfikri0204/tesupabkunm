@@ -281,6 +281,10 @@ export default function StudentDetailModal({ student, onClose }: StudentDetailMo
                                 <span className="font-bold text-slate-800">{student.nomor_hp || '-'}</span>
                             </div>
                             <div>
+                                <span className="text-slate-400 block font-bold">Email</span>
+                                <span className="font-bold text-slate-800 truncate block">{student.email || '-'}</span>
+                            </div>
+                            <div>
                                 <span className="text-slate-400 block font-bold">IPK Terakhir</span>
                                 <span className="font-bold text-slate-800">{student.ipk_terakhir || '-'}</span>
                             </div>

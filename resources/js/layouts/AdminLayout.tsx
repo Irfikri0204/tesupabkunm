@@ -19,7 +19,7 @@ export default function AdminLayout({ children, title }: { children: React.React
     ];
 
     const testMenuItems = [
-        { name: 'Identifikasi Kondisi (SIK-M)', path: '/admin/imm-groups', icon: <RiSurveyLine size={20} /> },
+        { name: 'Identifikasi Kondisi (SIKOM)', path: '/admin/imm-groups', icon: <RiSurveyLine size={20} /> },
         { name: 'Gaya Belajar', path: '/admin/gaya-belajar', icon: <RiBookOpenLine size={20} /> },
         { name: 'Pola Emosi', path: '/admin/panas', icon: <RiEmotionLine size={20} /> },
         { name: 'Kepuasan Hidup', path: '/admin/swls', icon: <RiHeartPulseLine size={20} /> },
@@ -86,7 +86,7 @@ export default function AdminLayout({ children, title }: { children: React.React
                                     }`}
                                 >
                                     <RiBookOpenLine size={20} />
-                                    Fakultas
+                                    Fakultas & Prodi
                                 </Link>
                                 <Link
                                     href="/admin/konseling-info"

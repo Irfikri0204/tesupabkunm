@@ -17,6 +17,7 @@ import { immInterpretations } from '@/utils/immInterpretations';
 
 const CONCLUSION_COLORS: Record<string, { bg: string; border: string; text: string; icon: any }> = {
     "Perlu Bantuan Segera": { bg: 'bg-red-50', border: 'border-red-500', text: 'text-red-800', icon: RiAlertLine },
+    "Perlu Bantuan": { bg: 'bg-red-50', border: 'border-red-500', text: 'text-red-800', icon: RiUserHeartLine },
     "Perlu Pendampingan": { bg: 'bg-orange-50', border: 'border-orange-400', text: 'text-orange-800', icon: RiUserHeartLine },
     "Perlu Perhatian": { bg: 'bg-yellow-50', border: 'border-yellow-400', text: 'text-yellow-800', icon: RiErrorWarningLine },
     "Kondisi Baik": { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-800', icon: RiShieldCheckLine },
@@ -25,6 +26,7 @@ const CONCLUSION_COLORS: Record<string, { bg: string; border: string; text: stri
 const CLASSIFICATION_BADGE: Record<string, string> = {
     "Baik": "bg-green-100 text-green-800 border-green-200",
     "Perlu Perhatian": "bg-yellow-100 text-yellow-800 border-yellow-200",
+    "Perlu Bantuan": "bg-red-100 text-red-800 border-red-200",
     "Perlu Pendampingan": "bg-orange-100 text-orange-800 border-orange-200",
     "Risiko rendah": "bg-green-100 text-green-800 border-green-200",
     "Risiko sedang": "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -77,7 +79,7 @@ export default function HasilIdentifikasiMasalah() {
     const getTotalScoreLevelInfo = (score: number) => {
         if (score <= 75) return { text: "Baik", style: "bg-emerald-100 text-emerald-800 border-emerald-200" };
         if (score <= 150) return { text: "Perlu Perhatian", style: "bg-amber-100 text-amber-800 border-amber-200" };
-        return { text: "Perlu Pendampingan", style: "bg-red-100 text-red-800 border-red-200" };
+        return { text: "Perlu Bantuan", style: "bg-red-100 text-red-800 border-red-200" };
     };
 
     // Sort sections from worst to best (highest score first)
@@ -87,7 +89,7 @@ export default function HasilIdentifikasiMasalah() {
     const generateNarrativeBlocks = () => {
         const LEVEL_CONFIG = {
             'Perlu Pendampingan': {
-                label: 'Perlu Pendampingan',
+                label: 'Tinggi (Perlu Bantuan)',
                 bg: 'bg-red-50',
                 border: 'border-red-200',
                 headerBg: 'bg-gradient-to-r from-red-500 to-rose-600',
@@ -95,10 +97,10 @@ export default function HasilIdentifikasiMasalah() {
                 accentColor: 'text-red-700',
                 actionBorder: 'border-l-red-400',
                 intro: (names: string) =>
-                    `Anda teridentifikasi membutuhkan pendampingan di ${names}. Di bidang ini, Anda mungkin sering mengalami masalah yang cukup berat dan dapat mengganggu jalannya kuliah Anda. Ingat, Anda tidak perlu menghadapi ini sendirian — ada tim konselor yang siap membantu.`
+                    `Anda teridentifikasi memiliki masalah serius pada ${names}. Di bidang ini, ada beberapa masalah yang cukup sering anda rasakan. Berikut adalah langkah-langkah yang Anda perlu perhatikan:`
             },
             'Perlu Perhatian': {
-                label: 'Perlu Perhatian',
+                label: 'Sedang (Perlu Perhatian)',
                 bg: 'bg-amber-50',
                 border: 'border-amber-200',
                 headerBg: 'bg-gradient-to-r from-amber-400 to-orange-500',
@@ -109,7 +111,7 @@ export default function HasilIdentifikasiMasalah() {
                     `Anda teridentifikasi perlu memberikan perhatian lebih pada ${names}. Di bidang ini, ada beberapa masalah yang cukup sering Anda rasakan. Hal ini wajar terjadi pada banyak mahasiswa dan dapat diatasi dengan langkah-langkah yang tepat.`
             },
             'Baik': {
-                label: 'Baik',
+                label: 'Rendah (Baik)',
                 bg: 'bg-emerald-50',
                 border: 'border-emerald-200',
                 headerBg: 'bg-gradient-to-r from-emerald-500 to-teal-500',
@@ -158,7 +160,7 @@ export default function HasilIdentifikasiMasalah() {
             if (groupings[lvl].length === 0) continue;
             const config = LEVEL_CONFIG[lvl];
             const names = groupings[lvl].map(t => t.replace('Bidang ', '')).join(', ');
-            const formattedNames = `bidang ${groupings[lvl].map(t => t.replace('Bidang ', '')).join(' dan ')}`.toLowerCase();
+            const formattedNames = groupings[lvl].map(t => t.toLowerCase().startsWith('bidang') ? t : `bidang ${t}`).join(', ');
             blocks.push({
                 config,
                 levelKey: lvl,
@@ -184,7 +186,7 @@ export default function HasilIdentifikasiMasalah() {
                                 <RiArrowLeftLine size={20} />
                             </button>
                             <div>
-                                <h2 className="font-bold text-slate-800">Hasil Sistem Identifikasi Kondisi - Mahasiswa (SIK-M)</h2>
+                                <h2 className="font-bold text-slate-800">Hasil Sistem Identifikasi Kondisi Mahasiswa (SIKOM)</h2>
                                 <p className="text-xs text-slate-500">{userData.nama} — {userData.nim}</p>
                             </div>
                         </div>
@@ -197,7 +199,7 @@ export default function HasilIdentifikasiMasalah() {
                     {/* Print Header (only visible in print) */}
                     <div className="hidden print:block mb-6">
                         <h1 className="text-2xl font-black text-center">LEMBAR HASIL</h1>
-                        <h2 className="text-lg font-bold text-center text-slate-600">Sistem Identifikasi Kondisi - Mahasiswa (SIK-M)</h2>
+                        <h2 className="text-lg font-bold text-center text-slate-600">Sistem Identifikasi Kondisi Mahasiswa (SIKOM)</h2>
                         <div className="mt-4 grid grid-cols-2 gap-2 text-sm border rounded-lg p-4">
                             <div><strong>Nama:</strong> {userData.nama}</div>
                             <div><strong>NIM:</strong> {userData.nim}</div>
@@ -268,115 +270,129 @@ export default function HasilIdentifikasiMasalah() {
                         </div>
                     </div>
 
-                    {/* ────────────── URAIAN HASIL (NARRATIVE) ────────────── */}
-                        <div className="rounded-3xl overflow-hidden shadow-sm border border-slate-200">
-                            {/* Header */}
-                            <div className="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 md:px-8 py-6">
-                                <div className="flex items-center gap-3 mb-1">
-                                    <div className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
-                                        <RiUserHeartLine size={20} className="text-white" />
-                                    </div>
-                                    <h2 className="text-xl font-black text-white tracking-tight">Uraian Hasil Identifikasi</h2>
-                                </div>
-                                <p className="text-indigo-200 text-sm ml-12">Rangkuman kondisi Anda berdasarkan hasil tes, diurutkan dari prioritas tertinggi.</p>
-                            </div>
-
-                            {/* Blocks */}
-                            <div className="bg-white divide-y divide-slate-100">
-                                {generateNarrativeBlocks().map((block, i) => (
-                                    <div key={i} className="p-5 md:p-7">
-                                        {/* Level label + bidang tags */}
-                                        <div className="flex flex-wrap items-center gap-2 mb-3">
-                                            <span className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold text-white ${block.config.headerBg}`}>
-                                                {block.config.label}
-                                            </span>
-                                            {block.bidangList.map((b: string) => (
-                                                <span key={b} className={`px-2.5 py-1 rounded-lg text-xs font-semibold ${block.config.tagBg}`}>
-                                                    {b.replace('Bidang ', '')}
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        {/* Intro paragraph */}
-                                        <p className="text-slate-600 text-sm leading-relaxed">
-                                            {block.intro}
-                                        </p>
-
-                                        {/* Accordion: Yang perlu dilakukan */}
-                                        {block.actions.length > 0 && (
-                                            <div className="mt-4">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setOpenNarrativeIndex(openNarrativeIndex === i ? null : i)}
-                                                    className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border text-left transition-all ${
-                                                        openNarrativeIndex === i
-                                                            ? `${block.config.bg} ${block.config.border} rounded-b-none border-b-0`
-                                                            : `${block.config.bg} ${block.config.border} hover:brightness-95`
-                                                    }`}
-                                                >
-                                                    <span className={`text-xs font-bold uppercase tracking-wider ${block.config.accentColor}`}>
-                                                        Yang perlu Anda lakukan
-                                                    </span>
-                                                    <RiArrowDownSLine
-                                                        size={16}
-                                                        className={`shrink-0 ${block.config.accentColor} transition-transform duration-200 ${
-                                                            openNarrativeIndex === i ? 'rotate-180' : ''
-                                                        }`}
-                                                    />
-                                                </button>
-
-                                                <div className={`overflow-hidden transition-all duration-300 ${
-                                                    openNarrativeIndex === i ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
-                                                }`}>
-                                                    <ul className={`border ${block.config.border} border-t-0 rounded-b-xl ${block.config.bg} px-4 pb-4 pt-2 space-y-2`}>
-                                                        {block.actions.map((action: string, ai: number) => (
-                                                            <li key={ai} className={`flex items-start gap-3 text-sm text-slate-700 bg-white rounded-xl px-4 py-3 border-l-4 ${block.config.actionBorder}`}>
-                                                                <span className="shrink-0 font-bold text-slate-400 text-xs w-5 text-right mt-0.5">{ai + 1}.</span>
-                                                                <span className="leading-relaxed">{action}</span>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
                     {/* ────────────── HASIL PER BIDANG (RINGKAS) ────────────── */}
-                        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
-                            <h2 className="text-xl font-black text-slate-800 mb-6">Rincian per Bidang Masalah (Berdasarkan Urutan Prioritas)</h2>
-                            <div className="space-y-4">
-                                {sortedSections.map((sec, idx) => {
-                                    const isOpen = openSectionIndex === idx;
-                                    const levelInfo = getSectionLevelInfo(sec.score);
-                                    return (
-                                        <div key={idx} className={`border border-slate-200 rounded-2xl overflow-hidden bg-slate-50 transition-all ${isOpen ? 'shadow-md ring-2 ring-slate-100' : 'hover:shadow-sm'} border-l-4 ${levelInfo.borderStyle}`}>
-                                            <button 
-                                                onClick={() => setOpenSectionIndex(isOpen ? null : idx)}
-                                                className={`w-full px-5 py-4 flex items-center justify-between transition-colors text-left ${isOpen ? 'bg-white' : 'hover:bg-slate-100/70'}`}
-                                            >
-                                                <h3 className="font-bold text-slate-800 flex-1">{idx + 1}. {sec.title}</h3>
-                                                <div className="flex items-center gap-3">
-                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold border ${levelInfo.style}`}>
-                                                        {levelInfo.text} (Skor: {sec.score}/45)
-                                                    </span>
-                                                    <div className={`p-1 rounded-full transition-colors ${isOpen ? 'bg-slate-100' : 'bg-transparent'}`}>
-                                                        <RiArrowDownSLine size={20} className={`text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-                                                    </div>
-                                                </div>
-                                            </button>
-                                            <div className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
-                                                <div className="px-5 pb-5 pt-2 border-t border-slate-100 bg-white">
-                                                    <p className="text-slate-600 text-sm leading-relaxed p-4 bg-slate-50 rounded-xl border border-slate-100">{sec.meaning}</p>
+                    <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
+                        <h2 className="text-xl font-black text-slate-800 mb-6">Rincian per Bidang Masalah (Berdasarkan Urutan Prioritas)</h2>
+                        <div className="space-y-4">
+                            {sortedSections.map((sec, idx) => {
+                                const isOpen = openSectionIndex === idx;
+                                const levelInfo = getSectionLevelInfo(sec.score);
+                                return (
+                                    <div key={idx} className={`border border-slate-200 rounded-2xl overflow-hidden bg-slate-50 transition-all ${isOpen ? 'shadow-md ring-2 ring-slate-100' : 'hover:shadow-sm'} border-l-4 ${levelInfo.borderStyle}`}>
+                                        <button 
+                                            onClick={() => setOpenSectionIndex(isOpen ? null : idx)}
+                                            className={`w-full px-5 py-4 flex items-center justify-between transition-colors text-left ${isOpen ? 'bg-white' : 'hover:bg-slate-100/70'}`}
+                                        >
+                                            <h3 className="font-bold text-slate-800 flex-1">{idx + 1}. {sec.title}</h3>
+                                            <div className="flex items-center gap-3">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold border ${levelInfo.style}`}>
+                                                    {levelInfo.text} (Skor: {sec.score}/45)
+                                                </span>
+                                                <div className={`p-1 rounded-full transition-colors ${isOpen ? 'bg-slate-100' : 'bg-transparent'}`}>
+                                                    <RiArrowDownSLine size={20} className={`text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                                                 </div>
                                             </div>
+                                        </button>
+                                        <div className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
+                                            <div className="px-5 pb-5 pt-2 border-t border-slate-100 bg-white">
+                                                <p className="text-slate-600 text-sm leading-relaxed p-4 bg-slate-50 rounded-xl border border-slate-100">{sec.meaning}</p>
+                                            </div>
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* ────────────── URAIAN HASIL (NARRATIVE) ────────────── */}
+                    <div className="rounded-3xl overflow-hidden shadow-sm border border-slate-200">
+                        {/* Header with Keterangan Warna */}
+                        <div className="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 md:px-8 py-6">
+                            <div className="flex items-center gap-3 mb-1">
+                                <div className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
+                                    <RiUserHeartLine size={20} className="text-white" />
+                                </div>
+                                <h2 className="text-xl font-black text-white tracking-tight">Uraian Hasil Identifikasi</h2>
+                            </div>
+                            <p className="text-indigo-200 text-sm ml-12 mb-3">Rangkuman kondisi Anda berdasarkan hasil tes, diurutkan dari prioritas tertinggi.</p>
+                            
+                            {/* Keterangan Warna (Tinggi = Merah, Sedang = Kuning, Rendah = Baik) */}
+                            <div className="ml-12 pt-3 border-t border-white/20 flex flex-wrap items-center gap-2 text-xs">
+                                <span className="text-white/80 font-bold uppercase tracking-wider text-[11px] mr-1">Keterangan Warna:</span>
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/25 text-white border border-red-300/30 font-semibold backdrop-blur-sm">
+                                    <span className="w-2 h-2 rounded-full bg-red-400 ring-2 ring-red-300/40"></span> Tinggi = Merah
+                                </span>
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/25 text-white border border-amber-300/30 font-semibold backdrop-blur-sm">
+                                    <span className="w-2 h-2 rounded-full bg-amber-300 ring-2 ring-amber-200/40"></span> Sedang = Kuning
+                                </span>
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/25 text-white border border-emerald-300/30 font-semibold backdrop-blur-sm">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-emerald-300/40"></span> Rendah = Baik
+                                </span>
                             </div>
                         </div>
+
+                        {/* Blocks */}
+                        <div className="bg-white divide-y divide-slate-100">
+                            {generateNarrativeBlocks().map((block, i) => (
+                                <div key={i} className="p-5 md:p-7">
+                                    {/* Level label + bidang tags */}
+                                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                                        <span className={`inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold text-white ${block.config.headerBg}`}>
+                                            {block.config.label}
+                                        </span>
+                                        {block.bidangList.map((b: string) => (
+                                            <span key={b} className={`px-2.5 py-1 rounded-lg text-xs font-semibold ${block.config.tagBg}`}>
+                                                {b.replace('Bidang ', '')}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    {/* Intro paragraph */}
+                                    <p className="text-slate-600 text-sm leading-relaxed">
+                                        {block.intro}
+                                    </p>
+
+                                    {/* Accordion: Yang perlu dilakukan */}
+                                    {block.actions.length > 0 && (
+                                        <div className="mt-4">
+                                            <button
+                                                type="button"
+                                                onClick={() => setOpenNarrativeIndex(openNarrativeIndex === i ? null : i)}
+                                                className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border text-left transition-all ${
+                                                    openNarrativeIndex === i
+                                                        ? `${block.config.bg} ${block.config.border} rounded-b-none border-b-0`
+                                                        : `${block.config.bg} ${block.config.border} hover:brightness-95`
+                                                }`}
+                                            >
+                                                <span className={`text-xs font-bold uppercase tracking-wider ${block.config.accentColor}`}>
+                                                    Yang perlu Anda lakukan
+                                                </span>
+                                                <RiArrowDownSLine
+                                                    size={16}
+                                                    className={`shrink-0 ${block.config.accentColor} transition-transform duration-200 ${
+                                                        openNarrativeIndex === i ? 'rotate-180' : ''
+                                                    }`}
+                                                />
+                                            </button>
+
+                                            <div className={`overflow-hidden transition-all duration-300 ${
+                                                openNarrativeIndex === i ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
+                                            }`}>
+                                                <ul className={`border ${block.config.border} border-t-0 rounded-b-xl ${block.config.bg} px-4 pb-4 pt-2 space-y-2`}>
+                                                    {block.actions.map((action: string, ai: number) => (
+                                                        <li key={ai} className={`flex items-start gap-3 text-sm text-slate-700 bg-white rounded-xl px-4 py-3 border-l-4 ${block.config.actionBorder}`}>
+                                                            <span className="shrink-0 font-bold text-slate-400 text-xs w-5 text-right mt-0.5">{ai + 1}.</span>
+                                                            <span className="leading-relaxed">{action}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
 
 
 

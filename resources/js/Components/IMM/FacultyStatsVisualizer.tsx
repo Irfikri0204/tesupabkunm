@@ -153,61 +153,6 @@ export default function FacultyStatsVisualizer({ data, compact = false }: StatsV
                         </div>
                     </div>
 
-                    {/* Visual Segmented Progress Cards */}
-                    <div className={`grid grid-cols-1 sm:grid-cols-2 ${compact ? 'lg:grid-cols-3' : 'lg:grid-cols-5'} gap-2.5 pt-2`}>
-                        {chartData.map((d) => {
-                            const pctBaik = d.total > 0 ? Math.round((d.Baik / d.total) * 100) : 0;
-                            const pctPerhatian = d.total > 0 ? Math.round((d.Perhatian / d.total) * 100) : 0;
-                            const pctPendampingan = d.total > 0 ? Math.round((d.Pendampingan / d.total) * 100) : 0;
-                            return (
-                                <div
-                                    key={d.name}
-                                    className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60 hover:bg-slate-50 transition-colors flex flex-col justify-between"
-                                >
-                                    <div>
-                                        <div className="flex items-center justify-between mb-1.5">
-                                            <span className="font-black text-slate-800 text-xs">{d.name}</span>
-                                            <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200/60">
-                                                {d.total} mhs
-                                            </span>
-                                        </div>
-
-                                        {/* Multi-segmented distribution bar */}
-                                        <div className="w-full h-2.5 bg-slate-200/70 rounded-full overflow-hidden flex my-2">
-                                            {pctBaik > 0 && (
-                                                <div
-                                                    style={{ width: `${pctBaik}%` }}
-                                                    className="bg-emerald-500 h-full transition-all"
-                                                    title={`Baik: ${d.Baik} (${pctBaik}%)`}
-                                                />
-                                            )}
-                                            {pctPerhatian > 0 && (
-                                                <div
-                                                    style={{ width: `${pctPerhatian}%` }}
-                                                    className="bg-amber-500 h-full transition-all"
-                                                    title={`Perhatian: ${d.Perhatian} (${pctPerhatian}%)`}
-                                                />
-                                            )}
-                                            {pctPendampingan > 0 && (
-                                                <div
-                                                    style={{ width: `${pctPendampingan}%` }}
-                                                    className="bg-rose-500 h-full transition-all"
-                                                    title={`Pendampingan: ${d.Pendampingan} (${pctPendampingan}%)`}
-                                                />
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Numbers breakdown */}
-                                    <div className="flex items-center justify-between text-[11px] font-bold pt-1.5 border-t border-slate-200/50 text-slate-600">
-                                        <span className="text-emerald-700" title="Baik">{d.Baik} Baik</span>
-                                        <span className="text-amber-700" title="Perlu Perhatian">{d.Perhatian} Perhatian</span>
-                                        <span className="text-rose-700" title="Perlu Pendampingan">{d.Pendampingan} Pendampingan</span>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
                 </div>
             ) : (
                 /* Tabular View */

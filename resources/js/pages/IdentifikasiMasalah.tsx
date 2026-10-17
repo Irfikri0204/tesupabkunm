@@ -55,7 +55,7 @@ const SECTIONS = [
             "Saya terlambat mengumpulkan tugas.",
             "Saya kehilangan semangat belajar.",
             "Saya sulit memahami materi kuliah.",
-            "Saya takut bertanya kepada dosen.",
+            "Saya takut bertanya kepada dosen jika ada yang tidak saya pahami.",
             "Saya mendapat nilai di bawah harapan saya.",
             "Saya gagal dalam ujian.",
             "Saya cemas saat menghadapi ujian.",
@@ -88,7 +88,7 @@ const SECTIONS = [
         ]
     },
     {
-        title: "Bidang Perilaku Berisiko dan Keuangan",
+        title: "Bidang Lainnya (Perilaku Berisiko)",
         items: [
             "Saya sulit berhenti bermain gawai.",
             "Saya bermain game online sampai lupa waktu.",
@@ -130,9 +130,6 @@ export default function IdentifikasiMasalah() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [penutup, setPenutup] = useState({
-        top_1: '',
-        top_2: '',
-        top_3: '',
         masalah_lain: '',
         masalah_lain_teks: '',
         butuh_layanan: '',
@@ -239,7 +236,7 @@ export default function IdentifikasiMasalah() {
                         <div className="flex items-center gap-4">
                             <LinkBack />
                             <div>
-                                <h2 className="font-bold text-slate-800">Sistem Identifikasi Kondisi - Mahasiswa (SIK-M)</h2>
+                            <h2 className="font-bold text-slate-800">Sistem Identifikasi Kondisi Mahasiswa (SIKOM)</h2>
                                 <p className="text-xs text-slate-500">Menjawab sebagai: {userData.nama}</p>
                             </div>
                         </div>
@@ -316,59 +313,9 @@ export default function IdentifikasiMasalah() {
                                 <p className="text-slate-500 mt-2">Mohon jawab beberapa pertanyaan terakhir ini.</p>
                             </div>
 
-                            {/* Q1: Tiga pernyataan paling mengganggu */}
+                            {/* Q1: Masalah lain */}
                             <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
-                                <h3 className="text-lg font-bold text-slate-800 mb-2">1. Tuliskan tiga nomor pernyataan yang paling mengganggu Anda saat ini (mulai dari yang paling berat):</h3>
-                                <p className="text-sm text-slate-500 mb-4 italic">Opsional — kosongkan jika tidak ada yang ingin disorot.</p>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-600 mb-2">Pertama</label>
-                                        <input 
-                                            type="number" min="1" max="75" 
-                                            value={penutup.top_1} onChange={(e) => {
-                                                const val = parseInt(e.target.value);
-                                                if (e.target.value === '' || (val >= 1 && val <= 75)) {
-                                                    setPenutup(p => ({ ...p, top_1: e.target.value }));
-                                                }
-                                            }}
-                                            placeholder="No. Pernyataan (1-75)" 
-                                            className="w-full rounded-xl border-slate-200 bg-slate-50 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all" 
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-600 mb-2">Kedua</label>
-                                        <input 
-                                            type="number" min="1" max="75" 
-                                            value={penutup.top_2} onChange={(e) => {
-                                                const val = parseInt(e.target.value);
-                                                if (e.target.value === '' || (val >= 1 && val <= 75)) {
-                                                    setPenutup(p => ({ ...p, top_2: e.target.value }));
-                                                }
-                                            }}
-                                            placeholder="No. Pernyataan (1-75)" 
-                                            className="w-full rounded-xl border-slate-200 bg-slate-50 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all" 
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-600 mb-2">Ketiga</label>
-                                        <input 
-                                            type="number" min="1" max="75" 
-                                            value={penutup.top_3} onChange={(e) => {
-                                                const val = parseInt(e.target.value);
-                                                if (e.target.value === '' || (val >= 1 && val <= 75)) {
-                                                    setPenutup(p => ({ ...p, top_3: e.target.value }));
-                                                }
-                                            }}
-                                            placeholder="No. Pernyataan (1-75)" 
-                                            className="w-full rounded-xl border-slate-200 bg-slate-50 p-3 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all" 
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Q2: Masalah lain */}
-                            <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
-                                <h3 className="text-lg font-bold text-slate-800 mb-4">2. Adakah masalah lain yang Anda alami tetapi belum tercantum dalam daftar?</h3>
+                                <h3 className="text-lg font-bold text-slate-800 mb-4">1. Adakah masalah lain yang Anda alami tetapi belum tercantum dalam daftar?</h3>
                                 <div className="space-y-4">
                                     <div className="flex gap-4">
                                         {['Tidak ada', 'Ada'].map(opt => (
@@ -399,9 +346,9 @@ export default function IdentifikasiMasalah() {
                                 </div>
                             </div>
 
-                            {/* Q3: Butuh layanan */}
+                            {/* Q2: Butuh layanan */}
                             <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
-                                <h3 className="text-lg font-bold text-slate-800 mb-4">3. Apakah Anda membutuhkan layanan konseling dan layanan lainnya?</h3>
+                                <h3 className="text-lg font-bold text-slate-800 mb-4">2. Apakah Anda membutuhkan layanan konseling dan layanan lainnya?</h3>
                                 <div className="space-y-4">
                                     <div className="flex flex-col sm:flex-row gap-4">
                                         <button
@@ -465,9 +412,9 @@ export default function IdentifikasiMasalah() {
                                 </div>
                             </div>
 
-                            {/* Q4: Bersedia dihubungi */}
+                            {/* Q3: Bersedia dihubungi */}
                             <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
-                                <h3 className="text-lg font-bold text-slate-800 mb-4">4. Bersediakah Anda dihubungi konselor maupun psikolog?</h3>
+                                <h3 className="text-lg font-bold text-slate-800 mb-4">3. Bersediakah Anda dihubungi konselor maupun psikolog?</h3>
                                 <div className="flex gap-4">
                                     {['Ya, bersedia', 'Tidak'].map(opt => (
                                         <button
@@ -485,9 +432,9 @@ export default function IdentifikasiMasalah() {
                                 </div>
                             </div>
 
-                            {/* Q5: Jujur */}
+                            {/* Q4: Jujur */}
                             <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
-                                <h3 className="text-lg font-bold text-slate-800 mb-4">5. Apakah Anda mengisi semua pernyataan dengan jujur?</h3>
+                                <h3 className="text-lg font-bold text-slate-800 mb-4">4. Apakah Anda mengisi semua pernyataan dengan jujur?</h3>
                                 <div className="flex gap-4">
                                     {['Ya', 'Tidak sepenuhnya'].map(opt => (
                                         <button

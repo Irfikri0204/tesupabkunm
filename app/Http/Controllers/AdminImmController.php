@@ -82,7 +82,7 @@ class AdminImmController extends Controller
 
         $headers = [
             'No', 'ID', 'Kampus / Kelompok', 'Nama', 'NIM', 'Fakultas', 'Prodi', 'Semester',
-            'Jenis Kelamin', 'No HP', 'Total Skor', 'Kategori Total',
+            'Jenis Kelamin', 'No HP', 'Email', 'Total Skor', 'Kategori Total',
             'Kesimpulan', 'Skor Putus Kuliah', 'Status Putus Kuliah',
             'Skor Pribadi', 'Skor Sosial', 'Skor Belajar', 'Skor Karier', 'Skor Lainnya',
             'Tanggal Tes'
@@ -96,11 +96,10 @@ class AdminImmController extends Controller
         ];
 
         foreach ($headers as $col => $header) {
-            // Support more than 26 columns if needed, but here we have < 26.
             $sheet->setCellValue(chr(65 + $col) . '1', $header);
         }
         
-        $sheet->getStyle('A1:U1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:V1')->applyFromArray($headerStyle);
         $sheet->getRowDimension(1)->setRowHeight(22);
 
         foreach ($records as $i => $r) {
@@ -117,19 +116,20 @@ class AdminImmController extends Controller
             $sheet->setCellValue("H$row", $r->semester);
             $sheet->setCellValue("I$row", $r->jenis_kelamin);
             $sheet->setCellValue("J$row", $r->nomor_hp);
-            $sheet->setCellValue("K$row", $r->total_score);
-            $sheet->setCellValue("L$row", $r->total_classification);
-            $sheet->setCellValue("M$row", $r->conclusion);
-            $sheet->setCellValue("N$row", $r->dropout_risk_score);
-            $sheet->setCellValue("O$row", $r->dropout_risk_classification);
-            $sheet->setCellValue("P$row", $r->skor_pribadi);
-            $sheet->setCellValue("Q$row", $r->skor_sosial);
-            $sheet->setCellValue("R$row", $r->skor_belajar);
-            $sheet->setCellValue("S$row", $r->skor_karier);
-            $sheet->setCellValue("T$row", $r->skor_lainnya);
-            $sheet->setCellValue("U$row", $r->created_at?->format('d/m/Y H:i'));
+            $sheet->setCellValue("K$row", $r->email);
+            $sheet->setCellValue("L$row", $r->total_score);
+            $sheet->setCellValue("M$row", $r->total_classification);
+            $sheet->setCellValue("N$row", $r->conclusion);
+            $sheet->setCellValue("O$row", $r->dropout_risk_score);
+            $sheet->setCellValue("P$row", $r->dropout_risk_classification);
+            $sheet->setCellValue("Q$row", $r->skor_pribadi);
+            $sheet->setCellValue("R$row", $r->skor_sosial);
+            $sheet->setCellValue("S$row", $r->skor_belajar);
+            $sheet->setCellValue("T$row", $r->skor_karier);
+            $sheet->setCellValue("U$row", $r->skor_lainnya);
+            $sheet->setCellValue("V$row", $r->created_at?->format('d/m/Y H:i'));
             
-            $sheet->getStyle("A$row:U$row")->applyFromArray([
+            $sheet->getStyle("A$row:V$row")->applyFromArray([
                 'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => $bg]],
                 'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['argb' => 'FFC4B5FD']]],
                 'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],

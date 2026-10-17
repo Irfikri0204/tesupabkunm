@@ -9,7 +9,7 @@ class ImmResult extends Model
     protected $fillable = [
         'imm_group_id', 'imm_faculty_id', 'imm_prodi_id',
         'nama', 'nim', 'fakultas', 'program_studi', 'semester',
-        'jenis_kelamin', 'tempat_tinggal', 'nomor_hp',
+        'jenis_kelamin', 'tempat_tinggal', 'nomor_hp', 'email',
         'status_bekerja', 'status_pernikahan',
         'penyandang_disabilitas', 'disabilitas_jenis',
         'penerima_beasiswa', 'ipk_terakhir', 'status_semester_lalu',

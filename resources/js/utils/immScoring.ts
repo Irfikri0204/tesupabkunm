@@ -59,7 +59,7 @@ export const INDICATOR_MAP: Section[] = [
         ]
     },
     {
-        index: 4, title: "Bidang Lainnya",
+        index: 4, title: "Bidang Lainnya (Perilaku Berisiko)",
         indicators: [
             { code: "R1", name: "Gawai dan dunia digital", items: [61, 62, 63] },
             { code: "R2", name: "Judi dan pinjaman online", items: [64, 65, 66] },
@@ -87,10 +87,10 @@ export function classifySectionScore(score: number): 'Baik' | 'Perlu Perhatian' 
 }
 
 /** Classify a total score (0-225) */
-export function classifyTotalScore(score: number): 'Baik' | 'Perlu Perhatian' | 'Perlu Pendampingan' {
+export function classifyTotalScore(score: number): 'Baik' | 'Perlu Perhatian' | 'Perlu Bantuan' {
     if (score <= 75) return 'Baik';
     if (score <= 150) return 'Perlu Perhatian';
-    return 'Perlu Pendampingan';
+    return 'Perlu Bantuan';
 }
 
 /** Classify an indicator score (0-9) */
@@ -307,7 +307,7 @@ const SECTION_ADVICE_DATA: Record<string, AdviceEntry[]> = {
             contact: "UPA BK; Dosen PA; Pusat Karier"
         }
     ],
-    "Bidang Lainnya": [
+    "Bidang Lainnya (Perilaku Berisiko)": [
         {
             classification: "Baik",
             meaning: "Anda mampu menjaga diri dan mengatur uang dengan baik. Tidak ada masalah berarti di bidang ini.",
@@ -402,7 +402,7 @@ const DROPOUT_ADVICE: DropoutAdviceEntry[] = [
         classification: "Risiko tinggi",
         meaning: "Ada banyak tanda yang dapat membuat Anda berhenti kuliah. Mari cari jalan keluarnya bersama.",
         actions: [
-            "Konselor akan menghubungi Anda dalam 3 hari kerja.",
+            "Konselor/Psikolog akan menghubungi Anda.",
             "Temui dosen PA minggu ini.",
             "Tanyakan bantuan biaya ke Bagian Kemahasiswaan bila perlu."
         ]
@@ -424,7 +424,7 @@ const CRITICAL_ITEM_DEFS: CriticalItemDef[] = [
         items: [14, 15],
         conditionFn: (a) => [1, 2, 3].some(v => a[14] === v || a[15] === v),
         condition: "1, 2, maupun 3",
-        messageForStudent: "Anda menyampaikan keinginan menyakiti diri maupun mengakhiri hidup. Perasaan ini bisa dibantu. Konselor akan menghubungi Anda hari ini.",
+        messageForStudent: "Anda menyampaikan keinginan menyakiti diri maupun mengakhiri hidup. Perasaan ini bisa dibantu. Konselor/Psikolog akan menghubungi Anda.",
         actionForCounselor: "Hari itu juga: hubungi mahasiswa, tanyakan keselamatannya, buat rencana keselamatan, rujuk ke psikolog/psikiater. Bila bahaya segera: Healing119, IGD."
     },
     {
@@ -494,11 +494,15 @@ interface ConclusionInfo {
 
 const CONCLUSION_INFO: Record<string, ConclusionInfo> = {
     "Perlu Bantuan Segera": {
-        message: "Terima kasih sudah jujur. Anda tidak sendirian. Konselor akan menghubungi Anda hari ini. Bila Anda merasa tidak aman sekarang, hubungi Healing119 (119 ekstensi 8) maupun IGD terdekat.",
+        message: "Terima kasih sudah jujur. Anda tidak sendirian. Konselor/Psikolog akan menghubungi Anda. Bila Anda merasa tidak aman sekarang, hubungi Healing119 (119 ekstensi 8) maupun IGD terdekat.",
         action: "Hubungi mahasiswa hari itu juga."
     },
+    "Perlu Bantuan": {
+        message: "Ada hal yang sebaiknya Anda bicarakan dengan konselor/psikolog. Konselor/Psikolog akan menghubungi Anda. Anda juga boleh langsung datang ke UPA BK.",
+        action: "Konseling individual; hubungi dalam 3 hari kerja."
+    },
     "Perlu Pendampingan": {
-        message: "Ada hal yang sebaiknya Anda bicarakan dengan konselor. Konselor akan menghubungi Anda dalam 3 hari kerja. Anda juga boleh langsung datang ke UPA BK.",
+        message: "Ada hal yang sebaiknya Anda bicarakan dengan konselor/psikolog. Konselor/Psikolog akan menghubungi Anda. Anda juga boleh langsung datang ke UPA BK.",
         action: "Konseling individual; hubungi dalam 3 hari kerja."
     },
     "Perlu Perhatian": {

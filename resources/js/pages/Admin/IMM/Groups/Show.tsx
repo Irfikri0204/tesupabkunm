@@ -1,6 +1,6 @@
 import AdminLayout from '@/layouts/AdminLayout';
 import { Link, useForm, router } from '@inertiajs/react';
-import { RiArrowLeftLine, RiPieChart2Fill, RiBuilding2Line, RiAddLine, RiEdit2Line, RiDeleteBinLine, RiFileCopyLine, RiCheckLine, RiToggleFill, RiToggleLine, RiDownloadLine, RiAlertFill } from '@remixicon/react';
+import { RiArrowLeftLine, RiPieChart2Fill, RiBuilding2Line, RiAddLine, RiEdit2Line, RiDeleteBinLine, RiFileCopyLine, RiCheckLine, RiToggleFill, RiToggleLine, RiDownloadLine, RiAlertFill, RiPrinterLine } from '@remixicon/react';
 import React, { useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { ImmList } from '../Index';
@@ -27,19 +27,32 @@ export default function Show({ group, faculties, facultyStats, totalResponses, c
         is_active: true,
     });
 
-    const COLORS = {
+    const COLORS: Record<string, string> = {
+        'Baik': '#10b981',
+        'Perlu Perhatian': '#f59e0b',
+        'Perlu Bantuan': '#ef4444',
         'Kondisi Baik': '#10b981',
         'Perlu Perhatian Khusus': '#f59e0b',
         'Perlu Bantuan Segera': '#ef4444',
+        'Perlu Pendampingan': '#ef4444',
         'Risiko rendah': '#10b981',
         'Risiko sedang': '#f59e0b',
         'Risiko tinggi': '#ef4444',
     };
 
-    const classificationData = Object.keys(classificationCounts).map(key => ({
-        name: key,
-        value: classificationCounts[key]
-    }));
+    // Normalize into 3 categories: Baik, Perlu Perhatian, Perlu Bantuan
+    const normalizedClassificationCounts: Record<string, number> = {
+        'Baik': (classificationCounts['Baik'] || 0) + (classificationCounts['Kondisi Baik'] || 0),
+        'Perlu Perhatian': (classificationCounts['Perlu Perhatian'] || 0) + (classificationCounts['Perlu Perhatian Khusus'] || 0),
+        'Perlu Bantuan': (classificationCounts['Perlu Bantuan'] || 0) + (classificationCounts['Perlu Pendampingan'] || 0) + (classificationCounts['Perlu Bantuan Segera'] || 0),
+    };
+
+    const classificationData = ['Baik', 'Perlu Perhatian', 'Perlu Bantuan']
+        .map(key => ({
+            name: key,
+            value: normalizedClassificationCounts[key] || 0
+        }))
+        .filter(entry => entry.value > 0);
 
     const dropoutData = Object.keys(dropoutCounts).map(key => ({
         name: key,
@@ -169,7 +182,17 @@ export default function Show({ group, faculties, facultyStats, totalResponses, c
                         </button>
                     </div>
                     
-                    <div className="flex items-center justify-end px-4 py-3 sm:py-0">
+                    <div className="flex flex-wrap items-center justify-end gap-2.5 px-4 py-3 sm:py-0">
+                        <a
+                            href={`/admin/imm-groups/${group.id}/profiling-report`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-sm hover:shadow-md transition-all active:scale-95"
+                            title="Buka & Cetak Laporan Profiling Kelompok Asesmen (PDF)"
+                        >
+                            <RiPrinterLine size={16} /> Cetak Profiling (PDF)
+                        </a>
+
                         <div className="relative group">
                             <button className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-2 rounded-xl font-bold text-sm hover:shadow-lg transition-all">
                                 <RiDownloadLine size={16} /> Export Excel
@@ -550,7 +573,7 @@ export default function Show({ group, faculties, facultyStats, totalResponses, c
                     <div className="animate-fade-in-up">
                         <ImmList
                             data={students}
-                            title="Data Mahasiswa Tes SIK-M"
+                            title="Data Mahasiswa Tes SIKOM"
                             deleteUrl={(id) => `/admin/imm/${id}`}
                             viewUrl={(id) => `/admin/imm/${id}`}
                             filterUrl={`/admin/imm-groups/${group.id}`}

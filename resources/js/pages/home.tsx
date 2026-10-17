@@ -82,7 +82,7 @@ const BUILTIN_TESTS: Record<string, { title: string; description: string; href: 
         icon: <RiMindMap className="h-8 w-8" />,
     },
     'identifikasi-masalah': {
-        title: 'Sistem Identifikasi Kondisi - Mahasiswa (SIK-M)',
+        title: 'Sistem Identifikasi Kondisi Mahasiswa (SIKOM)',
         description: 'Identifikasi potensi kendala akademik, pribadi, sosial, dan risiko perkuliahan untuk pendampingan tepat sasaran.',
         href: '/tes/identifikasi-masalah/universitas-negeri-makassar',
         icon: <RiSurveyLine className="h-8 w-8" />,

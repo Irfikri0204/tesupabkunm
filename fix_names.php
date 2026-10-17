@@ -12,6 +12,7 @@ $tests = [
     ['slug' => 'swls', 'name' => 'Dimensi Kepuasan Hidup', 'is_open' => true],
     ['slug' => 'srq20', 'name' => 'Kenali Kesehatan Mentalmu', 'is_open' => true],
     ['slug' => 'kecerdasan-majemuk', 'name' => 'Tes Kecerdasan Majemuk', 'is_open' => true],
+    ['slug' => 'identifikasi-masalah', 'name' => 'Sistem Identifikasi Kondisi Mahasiswa (SIKOM)', 'is_open' => true],
 ];
 
 foreach ($tests as $t) {

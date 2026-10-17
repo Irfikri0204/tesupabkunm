@@ -44,7 +44,7 @@ export function ImmList({ data, groups = [], title, exportUrl, deleteUrl, viewUr
         }
         const confirmMessage = (groupId || groupFilter)
             ? 'PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data hasil tes untuk kelompok ini? Tindakan ini tidak dapat dibatalkan.'
-            : 'PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data hasil tes SIK-M? Tindakan ini tidak dapat dibatalkan.';
+            : 'PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data hasil tes SIKOM? Tindakan ini tidak dapat dibatalkan.';
         if (!confirm(confirmMessage)) return;
         if (!confirm('Konfirmasi sekali lagi: Semua data yang terhapus TIDAK dapat dipulihkan. Lanjutkan penghapusan?')) return;
 
@@ -211,11 +211,11 @@ export function ImmList({ data, groups = [], title, exportUrl, deleteUrl, viewUr
 
 export default function Index({ data, groups, filters }: any) {
     return (
-        <AdminLayout title="Sistem Identifikasi Kondisi - Mahasiswa (SIK-M)">
+        <AdminLayout title="Sistem Identifikasi Kondisi Mahasiswa (SIKOM)">
             <ImmList
                 data={data}
                 groups={groups}
-                title="Daftar Hasil Tes SIK-M"
+                title="Daftar Hasil Tes SIKOM"
                 exportUrl={`/admin/imm/export/excel${filters?.group ? '?group=' + filters.group : ''}`}
                 deleteUrl={(id) => `/admin/imm/${id}`}
                 viewUrl={(id) => `/admin/imm/${id}`}

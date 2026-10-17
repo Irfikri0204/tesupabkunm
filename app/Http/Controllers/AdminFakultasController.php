@@ -14,7 +14,7 @@ class AdminFakultasController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $fakultas = Fakultas::orderBy('name')->get();
+        $fakultas = Fakultas::with('prodis')->orderBy('name')->get();
         return Inertia::render('Admin/Fakultas/Index', ['fakultas' => $fakultas]);
     }
 
